@@ -4,7 +4,7 @@ options {
     tokenVocab = FlaskPythonLexer;
 }
 
-// =================== ENTRY ===================
+// =================== ENTRY ====================
 program
     : statement* EOF
     ;
