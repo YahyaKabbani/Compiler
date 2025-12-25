@@ -61,5 +61,3 @@ NEWLINE
 WS
     : [ \t]+ -> skip
     ;
-
-

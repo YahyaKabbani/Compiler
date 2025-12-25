@@ -1,4 +1,4 @@
-// Generated from D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/projects/Antlr - Copy/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
+// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -16,38 +16,37 @@ public class HTMLJinja2Parser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		HTML_COMMENT=1, HTML_CONDITIONAL_COMMENT=2, XML=3, CDATA=4, DTD=5, SCRIPTLET=6, 
-		SEA_WS=7, SCRIPT_OPEN=8, STYLE_OPEN=9, TAG_OPEN=10, HTML_TEXT=11, TAG_CLOSE=12, 
-		TAG_SLASH_CLOSE=13, TAG_SLASH=14, TAG_EQUALS=15, TAG_NAME=16, TAG_WHITESPACE=17, 
-		SCRIPT_BODY=18, SCRIPT_SHORT_BODY=19, STYLE_BODY=20, STYLE_SHORT_BODY=21, 
-		ATTVALUE_VALUE=22, ATTRIBUTE=23;
+		JINJA_EXPR=1, JINJA_STMT=2, JINJA_COMMENT=3, HTML_COMMENT=4, HTML_CONDITIONAL_COMMENT=5, 
+		XML=6, CDATA=7, DTD=8, SCRIPTLET=9, SEA_WS=10, SCRIPT_OPEN=11, STYLE_OPEN=12, 
+		TAG_OPEN=13, HTML_TEXT=14, TAG_CLOSE=15, TAG_SLASH_CLOSE=16, TAG_SLASH=17, 
+		TAG_EQUALS=18, TAG_NAME=19, TAG_WHITESPACE=20, SCRIPT_BODY=21, STYLE_BODY=22, 
+		ATTVALUE_VALUE=23, ATTRIBUTE=24, SCRIPT_SHORT_BODY=25, STYLE_SHORT_BODY=26;
 	public static final int
-		RULE_htmlDocument = 0, RULE_scriptletOrSeaWs = 1, RULE_htmlElements = 2, 
-		RULE_htmlElement = 3, RULE_htmlContent = 4, RULE_htmlAttribute = 5, RULE_htmlChardata = 6, 
-		RULE_htmlMisc = 7, RULE_htmlComment = 8, RULE_script = 9, RULE_style = 10;
+		RULE_htmlDocument = 0, RULE_htmlElements = 1, RULE_htmlElement = 2, RULE_htmlContent = 3, 
+		RULE_htmlAttribute = 4, RULE_htmlChardata = 5, RULE_htmlMisc = 6, RULE_htmlComment = 7, 
+		RULE_script = 8, RULE_style = 9, RULE_jinja = 10;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"htmlDocument", "scriptletOrSeaWs", "htmlElements", "htmlElement", "htmlContent", 
-			"htmlAttribute", "htmlChardata", "htmlMisc", "htmlComment", "script", 
-			"style"
+			"htmlDocument", "htmlElements", "htmlElement", "htmlContent", "htmlAttribute", 
+			"htmlChardata", "htmlMisc", "htmlComment", "script", "style", "jinja"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, null, null, null, null, null, null, null, null, "'<'", null, 
-			"'>'", "'/>'", "'/'", "'='"
+			null, null, null, null, null, null, null, null, null, null, null, null, 
+			null, "'<'", null, "'>'", "'/>'", "'/'", "'='"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "HTML_COMMENT", "HTML_CONDITIONAL_COMMENT", "XML", "CDATA", "DTD", 
-			"SCRIPTLET", "SEA_WS", "SCRIPT_OPEN", "STYLE_OPEN", "TAG_OPEN", "HTML_TEXT", 
-			"TAG_CLOSE", "TAG_SLASH_CLOSE", "TAG_SLASH", "TAG_EQUALS", "TAG_NAME", 
-			"TAG_WHITESPACE", "SCRIPT_BODY", "SCRIPT_SHORT_BODY", "STYLE_BODY", "STYLE_SHORT_BODY", 
-			"ATTVALUE_VALUE", "ATTRIBUTE"
+			null, "JINJA_EXPR", "JINJA_STMT", "JINJA_COMMENT", "HTML_COMMENT", "HTML_CONDITIONAL_COMMENT", 
+			"XML", "CDATA", "DTD", "SCRIPTLET", "SEA_WS", "SCRIPT_OPEN", "STYLE_OPEN", 
+			"TAG_OPEN", "HTML_TEXT", "TAG_CLOSE", "TAG_SLASH_CLOSE", "TAG_SLASH", 
+			"TAG_EQUALS", "TAG_NAME", "TAG_WHITESPACE", "SCRIPT_BODY", "STYLE_BODY", 
+			"ATTVALUE_VALUE", "ATTRIBUTE", "SCRIPT_SHORT_BODY", "STYLE_SHORT_BODY"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -103,19 +102,21 @@ public class HTMLJinja2Parser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class HtmlDocumentContext extends ParserRuleContext {
-		public List<ScriptletOrSeaWsContext> scriptletOrSeaWs() {
-			return getRuleContexts(ScriptletOrSeaWsContext.class);
+		public List<TerminalNode> SEA_WS() { return getTokens(HTMLJinja2Parser.SEA_WS); }
+		public TerminalNode SEA_WS(int i) {
+			return getToken(HTMLJinja2Parser.SEA_WS, i);
 		}
-		public ScriptletOrSeaWsContext scriptletOrSeaWs(int i) {
-			return getRuleContext(ScriptletOrSeaWsContext.class,i);
-		}
-		public TerminalNode XML() { return getToken(HTMLJinja2Parser.XML, 0); }
-		public TerminalNode DTD() { return getToken(HTMLJinja2Parser.DTD, 0); }
 		public List<HtmlElementsContext> htmlElements() {
 			return getRuleContexts(HtmlElementsContext.class);
 		}
 		public HtmlElementsContext htmlElements(int i) {
 			return getRuleContext(HtmlElementsContext.class,i);
+		}
+		public List<JinjaContext> jinja() {
+			return getRuleContexts(JinjaContext.class);
+		}
+		public JinjaContext jinja(int i) {
+			return getRuleContext(JinjaContext.class,i);
 		}
 		public HtmlDocumentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -152,7 +153,7 @@ public class HTMLJinja2Parser extends Parser {
 					{
 					{
 					setState(22);
-					scriptletOrSeaWs();
+					match(SEA_WS);
 					}
 					} 
 				}
@@ -160,124 +161,51 @@ public class HTMLJinja2Parser extends Parser {
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
 			}
-			setState(29);
+			setState(30); 
 			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==XML) {
-				{
-				setState(28);
-				match(XML);
-				}
-			}
-
-			setState(34);
-			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
+			_alt = 1;
+			do {
+				switch (_alt) {
+				case 1:
 					{
-					{
-					setState(31);
-					scriptletOrSeaWs();
+					setState(30);
+					_errHandler.sync(this);
+					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
+					case 1:
+						{
+						setState(28);
+						htmlElements();
+						}
+						break;
+					case 2:
+						{
+						setState(29);
+						jinja();
+						}
+						break;
 					}
-					} 
+					}
+					break;
+				default:
+					throw new NoViableAltException(this);
 				}
-				setState(36);
+				setState(32); 
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
-			}
-			setState(38);
+			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
+			setState(37);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==DTD) {
-				{
-				setState(37);
-				match(DTD);
-				}
-			}
-
-			setState(43);
-			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					{
-					{
-					setState(40);
-					scriptletOrSeaWs();
-					}
-					} 
-				}
-				setState(45);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
-			}
-			setState(49);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1990L) != 0)) {
+			while (_la==SEA_WS) {
 				{
 				{
-				setState(46);
-				htmlElements();
+				setState(34);
+				match(SEA_WS);
 				}
 				}
-				setState(51);
+				setState(39);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class ScriptletOrSeaWsContext extends ParserRuleContext {
-		public TerminalNode SCRIPTLET() { return getToken(HTMLJinja2Parser.SCRIPTLET, 0); }
-		public TerminalNode SEA_WS() { return getToken(HTMLJinja2Parser.SEA_WS, 0); }
-		public ScriptletOrSeaWsContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_scriptletOrSeaWs; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof HTMLJinja2ParserListener ) ((HTMLJinja2ParserListener)listener).enterScriptletOrSeaWs(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof HTMLJinja2ParserListener ) ((HTMLJinja2ParserListener)listener).exitScriptletOrSeaWs(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof HTMLJinja2ParserVisitor ) return ((HTMLJinja2ParserVisitor<? extends T>)visitor).visitScriptletOrSeaWs(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final ScriptletOrSeaWsContext scriptletOrSeaWs() throws RecognitionException {
-		ScriptletOrSeaWsContext _localctx = new ScriptletOrSeaWsContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_scriptletOrSeaWs);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(52);
-			_la = _input.LA(1);
-			if ( !(_la==SCRIPTLET || _la==SEA_WS) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
 			}
 			}
 		}
@@ -324,43 +252,43 @@ public class HTMLJinja2Parser extends Parser {
 
 	public final HtmlElementsContext htmlElements() throws RecognitionException {
 		HtmlElementsContext _localctx = new HtmlElementsContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_htmlElements);
+		enterRule(_localctx, 2, RULE_htmlElements);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(57);
+			setState(43);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 134L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 1072L) != 0)) {
 				{
 				{
-				setState(54);
+				setState(40);
 				htmlMisc();
 				}
 				}
-				setState(59);
+				setState(45);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(60);
+			setState(46);
 			htmlElement();
-			setState(64);
+			setState(50);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(61);
+					setState(47);
 					htmlMisc();
 					}
 					} 
 				}
-				setState(66);
+				setState(52);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
 			}
 			}
 		}
@@ -400,12 +328,14 @@ public class HTMLJinja2Parser extends Parser {
 			return getRuleContext(HtmlContentContext.class,0);
 		}
 		public TerminalNode TAG_SLASH() { return getToken(HTMLJinja2Parser.TAG_SLASH, 0); }
-		public TerminalNode SCRIPTLET() { return getToken(HTMLJinja2Parser.SCRIPTLET, 0); }
 		public ScriptContext script() {
 			return getRuleContext(ScriptContext.class,0);
 		}
 		public StyleContext style() {
 			return getRuleContext(StyleContext.class,0);
+		}
+		public JinjaContext jinja() {
+			return getRuleContext(JinjaContext.class,0);
 		}
 		public HtmlElementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -428,54 +358,54 @@ public class HTMLJinja2Parser extends Parser {
 
 	public final HtmlElementContext htmlElement() throws RecognitionException {
 		HtmlElementContext _localctx = new HtmlElementContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_htmlElement);
+		enterRule(_localctx, 4, RULE_htmlElement);
 		int _la;
 		try {
-			setState(90);
+			setState(76);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case TAG_OPEN:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(67);
+				setState(53);
 				match(TAG_OPEN);
-				setState(68);
+				setState(54);
 				match(TAG_NAME);
-				setState(72);
+				setState(58);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==TAG_NAME) {
 					{
 					{
-					setState(69);
+					setState(55);
 					htmlAttribute();
 					}
 					}
-					setState(74);
+					setState(60);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
-				setState(85);
+				setState(71);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case TAG_CLOSE:
 					{
-					setState(75);
+					setState(61);
 					match(TAG_CLOSE);
-					setState(82);
+					setState(68);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 					case 1:
 						{
-						setState(76);
+						setState(62);
 						htmlContent();
-						setState(77);
+						setState(63);
 						match(TAG_OPEN);
-						setState(78);
+						setState(64);
 						match(TAG_SLASH);
-						setState(79);
+						setState(65);
 						match(TAG_NAME);
-						setState(80);
+						setState(66);
 						match(TAG_CLOSE);
 						}
 						break;
@@ -484,7 +414,7 @@ public class HTMLJinja2Parser extends Parser {
 					break;
 				case TAG_SLASH_CLOSE:
 					{
-					setState(84);
+					setState(70);
 					match(TAG_SLASH_CLOSE);
 					}
 					break;
@@ -493,25 +423,27 @@ public class HTMLJinja2Parser extends Parser {
 				}
 				}
 				break;
-			case SCRIPTLET:
+			case SCRIPT_OPEN:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(87);
-				match(SCRIPTLET);
-				}
-				break;
-			case SCRIPT_OPEN:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(88);
+				setState(73);
 				script();
 				}
 				break;
 			case STYLE_OPEN:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(74);
+				style();
+				}
+				break;
+			case JINJA_EXPR:
+			case JINJA_STMT:
+			case JINJA_COMMENT:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(89);
-				style();
+				setState(75);
+				jinja();
 				}
 				break;
 			default:
@@ -553,6 +485,12 @@ public class HTMLJinja2Parser extends Parser {
 		public HtmlCommentContext htmlComment(int i) {
 			return getRuleContext(HtmlCommentContext.class,i);
 		}
+		public List<JinjaContext> jinja() {
+			return getRuleContexts(JinjaContext.class);
+		}
+		public JinjaContext jinja(int i) {
+			return getRuleContext(JinjaContext.class,i);
+		}
 		public HtmlContentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -574,63 +512,63 @@ public class HTMLJinja2Parser extends Parser {
 
 	public final HtmlContentContext htmlContent() throws RecognitionException {
 		HtmlContentContext _localctx = new HtmlContentContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_htmlContent);
+		enterRule(_localctx, 6, RULE_htmlContent);
 		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(93);
+			setState(79);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==SEA_WS || _la==HTML_TEXT) {
 				{
-				setState(92);
+				setState(78);
 				htmlChardata();
 				}
 			}
 
-			setState(105);
+			setState(92);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,15,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(98);
+					setState(85);
 					_errHandler.sync(this);
-					switch (_input.LA(1)) {
-					case SCRIPTLET:
-					case SCRIPT_OPEN:
-					case STYLE_OPEN:
-					case TAG_OPEN:
+					switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
+					case 1:
 						{
-						setState(95);
+						setState(81);
 						htmlElement();
 						}
 						break;
-					case CDATA:
+					case 2:
 						{
-						setState(96);
+						setState(82);
 						match(CDATA);
 						}
 						break;
-					case HTML_COMMENT:
-					case HTML_CONDITIONAL_COMMENT:
+					case 3:
 						{
-						setState(97);
+						setState(83);
 						htmlComment();
 						}
 						break;
-					default:
-						throw new NoViableAltException(this);
+					case 4:
+						{
+						setState(84);
+						jinja();
+						}
+						break;
 					}
-					setState(101);
+					setState(88);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 					if (_la==SEA_WS || _la==HTML_TEXT) {
 						{
-						setState(100);
+						setState(87);
 						htmlChardata();
 						}
 					}
@@ -638,9 +576,9 @@ public class HTMLJinja2Parser extends Parser {
 					}
 					} 
 				}
-				setState(107);
+				setState(94);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,15,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
 			}
 			}
 		}
@@ -681,21 +619,21 @@ public class HTMLJinja2Parser extends Parser {
 
 	public final HtmlAttributeContext htmlAttribute() throws RecognitionException {
 		HtmlAttributeContext _localctx = new HtmlAttributeContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_htmlAttribute);
+		enterRule(_localctx, 8, RULE_htmlAttribute);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(108);
+			setState(95);
 			match(TAG_NAME);
-			setState(111);
+			setState(98);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==TAG_EQUALS) {
 				{
-				setState(109);
+				setState(96);
 				match(TAG_EQUALS);
-				setState(110);
+				setState(97);
 				match(ATTVALUE_VALUE);
 				}
 			}
@@ -738,12 +676,12 @@ public class HTMLJinja2Parser extends Parser {
 
 	public final HtmlChardataContext htmlChardata() throws RecognitionException {
 		HtmlChardataContext _localctx = new HtmlChardataContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_htmlChardata);
+		enterRule(_localctx, 10, RULE_htmlChardata);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(113);
+			setState(100);
 			_la = _input.LA(1);
 			if ( !(_la==SEA_WS || _la==HTML_TEXT) ) {
 			_errHandler.recoverInline(this);
@@ -793,23 +731,23 @@ public class HTMLJinja2Parser extends Parser {
 
 	public final HtmlMiscContext htmlMisc() throws RecognitionException {
 		HtmlMiscContext _localctx = new HtmlMiscContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_htmlMisc);
+		enterRule(_localctx, 12, RULE_htmlMisc);
 		try {
-			setState(117);
+			setState(104);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case HTML_COMMENT:
 			case HTML_CONDITIONAL_COMMENT:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(115);
+				setState(102);
 				htmlComment();
 				}
 				break;
 			case SEA_WS:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(116);
+				setState(103);
 				match(SEA_WS);
 				}
 				break;
@@ -853,12 +791,12 @@ public class HTMLJinja2Parser extends Parser {
 
 	public final HtmlCommentContext htmlComment() throws RecognitionException {
 		HtmlCommentContext _localctx = new HtmlCommentContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_htmlComment);
+		enterRule(_localctx, 14, RULE_htmlComment);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(119);
+			setState(106);
 			_la = _input.LA(1);
 			if ( !(_la==HTML_COMMENT || _la==HTML_CONDITIONAL_COMMENT) ) {
 			_errHandler.recoverInline(this);
@@ -907,14 +845,14 @@ public class HTMLJinja2Parser extends Parser {
 
 	public final ScriptContext script() throws RecognitionException {
 		ScriptContext _localctx = new ScriptContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_script);
+		enterRule(_localctx, 16, RULE_script);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(121);
+			setState(108);
 			match(SCRIPT_OPEN);
-			setState(122);
+			setState(109);
 			_la = _input.LA(1);
 			if ( !(_la==SCRIPT_BODY || _la==SCRIPT_SHORT_BODY) ) {
 			_errHandler.recoverInline(this);
@@ -963,14 +901,14 @@ public class HTMLJinja2Parser extends Parser {
 
 	public final StyleContext style() throws RecognitionException {
 		StyleContext _localctx = new StyleContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_style);
+		enterRule(_localctx, 18, RULE_style);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(124);
+			setState(111);
 			match(STYLE_OPEN);
-			setState(125);
+			setState(112);
 			_la = _input.LA(1);
 			if ( !(_la==STYLE_BODY || _la==STYLE_SHORT_BODY) ) {
 			_errHandler.recoverInline(this);
@@ -993,82 +931,130 @@ public class HTMLJinja2Parser extends Parser {
 		return _localctx;
 	}
 
+	@SuppressWarnings("CheckReturnValue")
+	public static class JinjaContext extends ParserRuleContext {
+		public TerminalNode JINJA_EXPR() { return getToken(HTMLJinja2Parser.JINJA_EXPR, 0); }
+		public TerminalNode JINJA_STMT() { return getToken(HTMLJinja2Parser.JINJA_STMT, 0); }
+		public TerminalNode JINJA_COMMENT() { return getToken(HTMLJinja2Parser.JINJA_COMMENT, 0); }
+		public JinjaContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_jinja; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof HTMLJinja2ParserListener ) ((HTMLJinja2ParserListener)listener).enterJinja(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof HTMLJinja2ParserListener ) ((HTMLJinja2ParserListener)listener).exitJinja(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof HTMLJinja2ParserVisitor ) return ((HTMLJinja2ParserVisitor<? extends T>)visitor).visitJinja(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final JinjaContext jinja() throws RecognitionException {
+		JinjaContext _localctx = new JinjaContext(_ctx, getState());
+		enterRule(_localctx, 20, RULE_jinja);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(114);
+			_la = _input.LA(1);
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 14L) != 0)) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static final String _serializedATN =
-		"\u0004\u0001\u0017\u0080\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001"+
-		"\u0002\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004"+
-		"\u0002\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007"+
-		"\u0002\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0001\u0000\u0005\u0000"+
-		"\u0018\b\u0000\n\u0000\f\u0000\u001b\t\u0000\u0001\u0000\u0003\u0000\u001e"+
-		"\b\u0000\u0001\u0000\u0005\u0000!\b\u0000\n\u0000\f\u0000$\t\u0000\u0001"+
-		"\u0000\u0003\u0000\'\b\u0000\u0001\u0000\u0005\u0000*\b\u0000\n\u0000"+
-		"\f\u0000-\t\u0000\u0001\u0000\u0005\u00000\b\u0000\n\u0000\f\u00003\t"+
-		"\u0000\u0001\u0001\u0001\u0001\u0001\u0002\u0005\u00028\b\u0002\n\u0002"+
-		"\f\u0002;\t\u0002\u0001\u0002\u0001\u0002\u0005\u0002?\b\u0002\n\u0002"+
-		"\f\u0002B\t\u0002\u0001\u0003\u0001\u0003\u0001\u0003\u0005\u0003G\b\u0003"+
-		"\n\u0003\f\u0003J\t\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
-		"\u0001\u0003\u0001\u0003\u0001\u0003\u0003\u0003S\b\u0003\u0001\u0003"+
-		"\u0003\u0003V\b\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0003\u0003"+
-		"[\b\u0003\u0001\u0004\u0003\u0004^\b\u0004\u0001\u0004\u0001\u0004\u0001"+
-		"\u0004\u0003\u0004c\b\u0004\u0001\u0004\u0003\u0004f\b\u0004\u0005\u0004"+
-		"h\b\u0004\n\u0004\f\u0004k\t\u0004\u0001\u0005\u0001\u0005\u0001\u0005"+
-		"\u0003\u0005p\b\u0005\u0001\u0006\u0001\u0006\u0001\u0007\u0001\u0007"+
-		"\u0003\u0007v\b\u0007\u0001\b\u0001\b\u0001\t\u0001\t\u0001\t\u0001\n"+
-		"\u0001\n\u0001\n\u0001\n\u0000\u0000\u000b\u0000\u0002\u0004\u0006\b\n"+
-		"\f\u000e\u0010\u0012\u0014\u0000\u0005\u0001\u0000\u0006\u0007\u0002\u0000"+
-		"\u0007\u0007\u000b\u000b\u0001\u0000\u0001\u0002\u0001\u0000\u0012\u0013"+
-		"\u0001\u0000\u0014\u0015\u0089\u0000\u0019\u0001\u0000\u0000\u0000\u0002"+
-		"4\u0001\u0000\u0000\u0000\u00049\u0001\u0000\u0000\u0000\u0006Z\u0001"+
-		"\u0000\u0000\u0000\b]\u0001\u0000\u0000\u0000\nl\u0001\u0000\u0000\u0000"+
-		"\fq\u0001\u0000\u0000\u0000\u000eu\u0001\u0000\u0000\u0000\u0010w\u0001"+
-		"\u0000\u0000\u0000\u0012y\u0001\u0000\u0000\u0000\u0014|\u0001\u0000\u0000"+
-		"\u0000\u0016\u0018\u0003\u0002\u0001\u0000\u0017\u0016\u0001\u0000\u0000"+
-		"\u0000\u0018\u001b\u0001\u0000\u0000\u0000\u0019\u0017\u0001\u0000\u0000"+
-		"\u0000\u0019\u001a\u0001\u0000\u0000\u0000\u001a\u001d\u0001\u0000\u0000"+
-		"\u0000\u001b\u0019\u0001\u0000\u0000\u0000\u001c\u001e\u0005\u0003\u0000"+
-		"\u0000\u001d\u001c\u0001\u0000\u0000\u0000\u001d\u001e\u0001\u0000\u0000"+
-		"\u0000\u001e\"\u0001\u0000\u0000\u0000\u001f!\u0003\u0002\u0001\u0000"+
-		" \u001f\u0001\u0000\u0000\u0000!$\u0001\u0000\u0000\u0000\" \u0001\u0000"+
-		"\u0000\u0000\"#\u0001\u0000\u0000\u0000#&\u0001\u0000\u0000\u0000$\"\u0001"+
-		"\u0000\u0000\u0000%\'\u0005\u0005\u0000\u0000&%\u0001\u0000\u0000\u0000"+
-		"&\'\u0001\u0000\u0000\u0000\'+\u0001\u0000\u0000\u0000(*\u0003\u0002\u0001"+
-		"\u0000)(\u0001\u0000\u0000\u0000*-\u0001\u0000\u0000\u0000+)\u0001\u0000"+
-		"\u0000\u0000+,\u0001\u0000\u0000\u0000,1\u0001\u0000\u0000\u0000-+\u0001"+
-		"\u0000\u0000\u0000.0\u0003\u0004\u0002\u0000/.\u0001\u0000\u0000\u0000"+
-		"03\u0001\u0000\u0000\u00001/\u0001\u0000\u0000\u000012\u0001\u0000\u0000"+
-		"\u00002\u0001\u0001\u0000\u0000\u000031\u0001\u0000\u0000\u000045\u0007"+
-		"\u0000\u0000\u00005\u0003\u0001\u0000\u0000\u000068\u0003\u000e\u0007"+
-		"\u000076\u0001\u0000\u0000\u00008;\u0001\u0000\u0000\u000097\u0001\u0000"+
-		"\u0000\u00009:\u0001\u0000\u0000\u0000:<\u0001\u0000\u0000\u0000;9\u0001"+
-		"\u0000\u0000\u0000<@\u0003\u0006\u0003\u0000=?\u0003\u000e\u0007\u0000"+
-		">=\u0001\u0000\u0000\u0000?B\u0001\u0000\u0000\u0000@>\u0001\u0000\u0000"+
-		"\u0000@A\u0001\u0000\u0000\u0000A\u0005\u0001\u0000\u0000\u0000B@\u0001"+
-		"\u0000\u0000\u0000CD\u0005\n\u0000\u0000DH\u0005\u0010\u0000\u0000EG\u0003"+
-		"\n\u0005\u0000FE\u0001\u0000\u0000\u0000GJ\u0001\u0000\u0000\u0000HF\u0001"+
-		"\u0000\u0000\u0000HI\u0001\u0000\u0000\u0000IU\u0001\u0000\u0000\u0000"+
-		"JH\u0001\u0000\u0000\u0000KR\u0005\f\u0000\u0000LM\u0003\b\u0004\u0000"+
-		"MN\u0005\n\u0000\u0000NO\u0005\u000e\u0000\u0000OP\u0005\u0010\u0000\u0000"+
-		"PQ\u0005\f\u0000\u0000QS\u0001\u0000\u0000\u0000RL\u0001\u0000\u0000\u0000"+
-		"RS\u0001\u0000\u0000\u0000SV\u0001\u0000\u0000\u0000TV\u0005\r\u0000\u0000"+
-		"UK\u0001\u0000\u0000\u0000UT\u0001\u0000\u0000\u0000V[\u0001\u0000\u0000"+
-		"\u0000W[\u0005\u0006\u0000\u0000X[\u0003\u0012\t\u0000Y[\u0003\u0014\n"+
-		"\u0000ZC\u0001\u0000\u0000\u0000ZW\u0001\u0000\u0000\u0000ZX\u0001\u0000"+
-		"\u0000\u0000ZY\u0001\u0000\u0000\u0000[\u0007\u0001\u0000\u0000\u0000"+
-		"\\^\u0003\f\u0006\u0000]\\\u0001\u0000\u0000\u0000]^\u0001\u0000\u0000"+
-		"\u0000^i\u0001\u0000\u0000\u0000_c\u0003\u0006\u0003\u0000`c\u0005\u0004"+
-		"\u0000\u0000ac\u0003\u0010\b\u0000b_\u0001\u0000\u0000\u0000b`\u0001\u0000"+
-		"\u0000\u0000ba\u0001\u0000\u0000\u0000ce\u0001\u0000\u0000\u0000df\u0003"+
-		"\f\u0006\u0000ed\u0001\u0000\u0000\u0000ef\u0001\u0000\u0000\u0000fh\u0001"+
-		"\u0000\u0000\u0000gb\u0001\u0000\u0000\u0000hk\u0001\u0000\u0000\u0000"+
-		"ig\u0001\u0000\u0000\u0000ij\u0001\u0000\u0000\u0000j\t\u0001\u0000\u0000"+
-		"\u0000ki\u0001\u0000\u0000\u0000lo\u0005\u0010\u0000\u0000mn\u0005\u000f"+
-		"\u0000\u0000np\u0005\u0016\u0000\u0000om\u0001\u0000\u0000\u0000op\u0001"+
-		"\u0000\u0000\u0000p\u000b\u0001\u0000\u0000\u0000qr\u0007\u0001\u0000"+
-		"\u0000r\r\u0001\u0000\u0000\u0000sv\u0003\u0010\b\u0000tv\u0005\u0007"+
-		"\u0000\u0000us\u0001\u0000\u0000\u0000ut\u0001\u0000\u0000\u0000v\u000f"+
-		"\u0001\u0000\u0000\u0000wx\u0007\u0002\u0000\u0000x\u0011\u0001\u0000"+
-		"\u0000\u0000yz\u0005\b\u0000\u0000z{\u0007\u0003\u0000\u0000{\u0013\u0001"+
-		"\u0000\u0000\u0000|}\u0005\t\u0000\u0000}~\u0007\u0004\u0000\u0000~\u0015"+
-		"\u0001\u0000\u0000\u0000\u0012\u0019\u001d\"&+19@HRUZ]beiou";
+		"\u0004\u0001\u001au\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
+		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
+		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0001\u0000\u0005\u0000\u0018"+
+		"\b\u0000\n\u0000\f\u0000\u001b\t\u0000\u0001\u0000\u0001\u0000\u0004\u0000"+
+		"\u001f\b\u0000\u000b\u0000\f\u0000 \u0001\u0000\u0005\u0000$\b\u0000\n"+
+		"\u0000\f\u0000\'\t\u0000\u0001\u0001\u0005\u0001*\b\u0001\n\u0001\f\u0001"+
+		"-\t\u0001\u0001\u0001\u0001\u0001\u0005\u00011\b\u0001\n\u0001\f\u0001"+
+		"4\t\u0001\u0001\u0002\u0001\u0002\u0001\u0002\u0005\u00029\b\u0002\n\u0002"+
+		"\f\u0002<\t\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001"+
+		"\u0002\u0001\u0002\u0001\u0002\u0003\u0002E\b\u0002\u0001\u0002\u0003"+
+		"\u0002H\b\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0003\u0002M\b\u0002"+
+		"\u0001\u0003\u0003\u0003P\b\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
+		"\u0001\u0003\u0003\u0003V\b\u0003\u0001\u0003\u0003\u0003Y\b\u0003\u0005"+
+		"\u0003[\b\u0003\n\u0003\f\u0003^\t\u0003\u0001\u0004\u0001\u0004\u0001"+
+		"\u0004\u0003\u0004c\b\u0004\u0001\u0005\u0001\u0005\u0001\u0006\u0001"+
+		"\u0006\u0003\u0006i\b\u0006\u0001\u0007\u0001\u0007\u0001\b\u0001\b\u0001"+
+		"\b\u0001\t\u0001\t\u0001\t\u0001\n\u0001\n\u0001\n\u0000\u0000\u000b\u0000"+
+		"\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0000\u0005\u0002\u0000"+
+		"\n\n\u000e\u000e\u0001\u0000\u0004\u0005\u0002\u0000\u0015\u0015\u0019"+
+		"\u0019\u0002\u0000\u0016\u0016\u001a\u001a\u0001\u0000\u0001\u0003}\u0000"+
+		"\u0019\u0001\u0000\u0000\u0000\u0002+\u0001\u0000\u0000\u0000\u0004L\u0001"+
+		"\u0000\u0000\u0000\u0006O\u0001\u0000\u0000\u0000\b_\u0001\u0000\u0000"+
+		"\u0000\nd\u0001\u0000\u0000\u0000\fh\u0001\u0000\u0000\u0000\u000ej\u0001"+
+		"\u0000\u0000\u0000\u0010l\u0001\u0000\u0000\u0000\u0012o\u0001\u0000\u0000"+
+		"\u0000\u0014r\u0001\u0000\u0000\u0000\u0016\u0018\u0005\n\u0000\u0000"+
+		"\u0017\u0016\u0001\u0000\u0000\u0000\u0018\u001b\u0001\u0000\u0000\u0000"+
+		"\u0019\u0017\u0001\u0000\u0000\u0000\u0019\u001a\u0001\u0000\u0000\u0000"+
+		"\u001a\u001e\u0001\u0000\u0000\u0000\u001b\u0019\u0001\u0000\u0000\u0000"+
+		"\u001c\u001f\u0003\u0002\u0001\u0000\u001d\u001f\u0003\u0014\n\u0000\u001e"+
+		"\u001c\u0001\u0000\u0000\u0000\u001e\u001d\u0001\u0000\u0000\u0000\u001f"+
+		" \u0001\u0000\u0000\u0000 \u001e\u0001\u0000\u0000\u0000 !\u0001\u0000"+
+		"\u0000\u0000!%\u0001\u0000\u0000\u0000\"$\u0005\n\u0000\u0000#\"\u0001"+
+		"\u0000\u0000\u0000$\'\u0001\u0000\u0000\u0000%#\u0001\u0000\u0000\u0000"+
+		"%&\u0001\u0000\u0000\u0000&\u0001\u0001\u0000\u0000\u0000\'%\u0001\u0000"+
+		"\u0000\u0000(*\u0003\f\u0006\u0000)(\u0001\u0000\u0000\u0000*-\u0001\u0000"+
+		"\u0000\u0000+)\u0001\u0000\u0000\u0000+,\u0001\u0000\u0000\u0000,.\u0001"+
+		"\u0000\u0000\u0000-+\u0001\u0000\u0000\u0000.2\u0003\u0004\u0002\u0000"+
+		"/1\u0003\f\u0006\u00000/\u0001\u0000\u0000\u000014\u0001\u0000\u0000\u0000"+
+		"20\u0001\u0000\u0000\u000023\u0001\u0000\u0000\u00003\u0003\u0001\u0000"+
+		"\u0000\u000042\u0001\u0000\u0000\u000056\u0005\r\u0000\u00006:\u0005\u0013"+
+		"\u0000\u000079\u0003\b\u0004\u000087\u0001\u0000\u0000\u00009<\u0001\u0000"+
+		"\u0000\u0000:8\u0001\u0000\u0000\u0000:;\u0001\u0000\u0000\u0000;G\u0001"+
+		"\u0000\u0000\u0000<:\u0001\u0000\u0000\u0000=D\u0005\u000f\u0000\u0000"+
+		">?\u0003\u0006\u0003\u0000?@\u0005\r\u0000\u0000@A\u0005\u0011\u0000\u0000"+
+		"AB\u0005\u0013\u0000\u0000BC\u0005\u000f\u0000\u0000CE\u0001\u0000\u0000"+
+		"\u0000D>\u0001\u0000\u0000\u0000DE\u0001\u0000\u0000\u0000EH\u0001\u0000"+
+		"\u0000\u0000FH\u0005\u0010\u0000\u0000G=\u0001\u0000\u0000\u0000GF\u0001"+
+		"\u0000\u0000\u0000HM\u0001\u0000\u0000\u0000IM\u0003\u0010\b\u0000JM\u0003"+
+		"\u0012\t\u0000KM\u0003\u0014\n\u0000L5\u0001\u0000\u0000\u0000LI\u0001"+
+		"\u0000\u0000\u0000LJ\u0001\u0000\u0000\u0000LK\u0001\u0000\u0000\u0000"+
+		"M\u0005\u0001\u0000\u0000\u0000NP\u0003\n\u0005\u0000ON\u0001\u0000\u0000"+
+		"\u0000OP\u0001\u0000\u0000\u0000P\\\u0001\u0000\u0000\u0000QV\u0003\u0004"+
+		"\u0002\u0000RV\u0005\u0007\u0000\u0000SV\u0003\u000e\u0007\u0000TV\u0003"+
+		"\u0014\n\u0000UQ\u0001\u0000\u0000\u0000UR\u0001\u0000\u0000\u0000US\u0001"+
+		"\u0000\u0000\u0000UT\u0001\u0000\u0000\u0000VX\u0001\u0000\u0000\u0000"+
+		"WY\u0003\n\u0005\u0000XW\u0001\u0000\u0000\u0000XY\u0001\u0000\u0000\u0000"+
+		"Y[\u0001\u0000\u0000\u0000ZU\u0001\u0000\u0000\u0000[^\u0001\u0000\u0000"+
+		"\u0000\\Z\u0001\u0000\u0000\u0000\\]\u0001\u0000\u0000\u0000]\u0007\u0001"+
+		"\u0000\u0000\u0000^\\\u0001\u0000\u0000\u0000_b\u0005\u0013\u0000\u0000"+
+		"`a\u0005\u0012\u0000\u0000ac\u0005\u0017\u0000\u0000b`\u0001\u0000\u0000"+
+		"\u0000bc\u0001\u0000\u0000\u0000c\t\u0001\u0000\u0000\u0000de\u0007\u0000"+
+		"\u0000\u0000e\u000b\u0001\u0000\u0000\u0000fi\u0003\u000e\u0007\u0000"+
+		"gi\u0005\n\u0000\u0000hf\u0001\u0000\u0000\u0000hg\u0001\u0000\u0000\u0000"+
+		"i\r\u0001\u0000\u0000\u0000jk\u0007\u0001\u0000\u0000k\u000f\u0001\u0000"+
+		"\u0000\u0000lm\u0005\u000b\u0000\u0000mn\u0007\u0002\u0000\u0000n\u0011"+
+		"\u0001\u0000\u0000\u0000op\u0005\f\u0000\u0000pq\u0007\u0003\u0000\u0000"+
+		"q\u0013\u0001\u0000\u0000\u0000rs\u0007\u0004\u0000\u0000s\u0015\u0001"+
+		"\u0000\u0000\u0000\u0010\u0019\u001e %+2:DGLOUX\\bh";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
