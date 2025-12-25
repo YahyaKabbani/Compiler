@@ -1,4 +1,4 @@
-// Generated from D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/projects/Antlr - Copy/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
+// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -16,16 +16,6 @@ public interface HTMLJinja2ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitHtmlDocument(HTMLJinja2Parser.HtmlDocumentContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link HTMLJinja2Parser#scriptletOrSeaWs}.
-	 * @param ctx the parse tree
-	 */
-	void enterScriptletOrSeaWs(HTMLJinja2Parser.ScriptletOrSeaWsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HTMLJinja2Parser#scriptletOrSeaWs}.
-	 * @param ctx the parse tree
-	 */
-	void exitScriptletOrSeaWs(HTMLJinja2Parser.ScriptletOrSeaWsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link HTMLJinja2Parser#htmlElements}.
 	 * @param ctx the parse tree
@@ -116,4 +106,14 @@ public interface HTMLJinja2ParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStyle(HTMLJinja2Parser.StyleContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link HTMLJinja2Parser#jinja}.
+	 * @param ctx the parse tree
+	 */
+	void enterJinja(HTMLJinja2Parser.JinjaContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HTMLJinja2Parser#jinja}.
+	 * @param ctx the parse tree
+	 */
+	void exitJinja(HTMLJinja2Parser.JinjaContext ctx);
 }

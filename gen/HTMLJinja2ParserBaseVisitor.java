@@ -1,4 +1,4 @@
-// Generated from D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/projects/Antlr - Copy/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
+// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -18,13 +18,6 @@ public class HTMLJinja2ParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitHtmlDocument(HTMLJinja2Parser.HtmlDocumentContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitScriptletOrSeaWs(HTMLJinja2Parser.ScriptletOrSeaWsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -88,4 +81,11 @@ public class HTMLJinja2ParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitStyle(HTMLJinja2Parser.StyleContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitJinja(HTMLJinja2Parser.JinjaContext ctx) { return visitChildren(ctx); }
 }

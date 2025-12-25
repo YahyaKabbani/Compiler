@@ -1,0 +1,11 @@
+<h1>Products</h1>
+<a href="/add">Add Product</a>
+
+{% for p in products %}
+<div>
+    <img src="/static/uploads/{{ p.photo }}" width="150" />
+    <h3>{{ p.name }} - ${{ p.price }}</h3>
+    <a href="/product/{{ p.id }}">Details</a>
+</div>
+<hr />
+{% endfor %}

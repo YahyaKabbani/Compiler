@@ -1,4 +1,4 @@
-// Generated from D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/projects/Antlr - Copy/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
+// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -23,18 +23,6 @@ public class HTMLJinja2ParserBaseListener implements HTMLJinja2ParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitHtmlDocument(HTMLJinja2Parser.HtmlDocumentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterScriptletOrSeaWs(HTMLJinja2Parser.ScriptletOrSeaWsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitScriptletOrSeaWs(HTMLJinja2Parser.ScriptletOrSeaWsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -143,6 +131,18 @@ public class HTMLJinja2ParserBaseListener implements HTMLJinja2ParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStyle(HTMLJinja2Parser.StyleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterJinja(HTMLJinja2Parser.JinjaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitJinja(HTMLJinja2Parser.JinjaContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

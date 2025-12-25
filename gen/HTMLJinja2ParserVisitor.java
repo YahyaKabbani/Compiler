@@ -1,4 +1,4 @@
-// Generated from D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/projects/Antlr - Copy/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
+// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammarsHTML/HTMLJinja2Parser.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -15,12 +15,6 @@ public interface HTMLJinja2ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitHtmlDocument(HTMLJinja2Parser.HtmlDocumentContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HTMLJinja2Parser#scriptletOrSeaWs}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitScriptletOrSeaWs(HTMLJinja2Parser.ScriptletOrSeaWsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link HTMLJinja2Parser#htmlElements}.
 	 * @param ctx the parse tree
@@ -75,4 +69,10 @@ public interface HTMLJinja2ParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStyle(HTMLJinja2Parser.StyleContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link HTMLJinja2Parser#jinja}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJinja(HTMLJinja2Parser.JinjaContext ctx);
 }
