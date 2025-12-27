@@ -31,6 +31,34 @@ public class FlaskPythonParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitSimpleStmt(FlaskPythonParser.SimpleStmtContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitCompoundStmt(FlaskPythonParser.CompoundStmtContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDecoratedDef(FlaskPythonParser.DecoratedDefContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDecorator(FlaskPythonParser.DecoratorContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitImportStmt(FlaskPythonParser.ImportStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -60,13 +88,6 @@ public class FlaskPythonParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitParamList(FlaskPythonParser.ParamListContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitDecorator(FlaskPythonParser.DecoratorContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -115,6 +136,13 @@ public class FlaskPythonParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitArgument(FlaskPythonParser.ArgumentContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitAtom(FlaskPythonParser.AtomContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -129,12 +157,12 @@ public class FlaskPythonParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitListLiteral(FlaskPythonParser.ListLiteralContext ctx) { return visitChildren(ctx); }
+	@Override public T visitDictEntry(FlaskPythonParser.DictEntryContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitArgument(FlaskPythonParser.ArgumentContext ctx) { return visitChildren(ctx); }
+	@Override public T visitListLiteral(FlaskPythonParser.ListLiteralContext ctx) { return visitChildren(ctx); }
 }

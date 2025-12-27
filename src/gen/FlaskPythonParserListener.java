@@ -27,6 +27,46 @@ public interface FlaskPythonParserListener extends ParseTreeListener {
 	 */
 	void exitStatement(FlaskPythonParser.StatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link FlaskPythonParser#simpleStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterSimpleStmt(FlaskPythonParser.SimpleStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FlaskPythonParser#simpleStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitSimpleStmt(FlaskPythonParser.SimpleStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FlaskPythonParser#compoundStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterCompoundStmt(FlaskPythonParser.CompoundStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FlaskPythonParser#compoundStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitCompoundStmt(FlaskPythonParser.CompoundStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FlaskPythonParser#decoratedDef}.
+	 * @param ctx the parse tree
+	 */
+	void enterDecoratedDef(FlaskPythonParser.DecoratedDefContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FlaskPythonParser#decoratedDef}.
+	 * @param ctx the parse tree
+	 */
+	void exitDecoratedDef(FlaskPythonParser.DecoratedDefContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FlaskPythonParser#decorator}.
+	 * @param ctx the parse tree
+	 */
+	void enterDecorator(FlaskPythonParser.DecoratorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FlaskPythonParser#decorator}.
+	 * @param ctx the parse tree
+	 */
+	void exitDecorator(FlaskPythonParser.DecoratorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link FlaskPythonParser#importStmt}.
 	 * @param ctx the parse tree
 	 */
@@ -76,16 +116,6 @@ public interface FlaskPythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParamList(FlaskPythonParser.ParamListContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link FlaskPythonParser#decorator}.
-	 * @param ctx the parse tree
-	 */
-	void enterDecorator(FlaskPythonParser.DecoratorContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link FlaskPythonParser#decorator}.
-	 * @param ctx the parse tree
-	 */
-	void exitDecorator(FlaskPythonParser.DecoratorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FlaskPythonParser#ifStmt}.
 	 * @param ctx the parse tree
@@ -147,6 +177,16 @@ public interface FlaskPythonParserListener extends ParseTreeListener {
 	 */
 	void exitArgList(FlaskPythonParser.ArgListContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link FlaskPythonParser#argument}.
+	 * @param ctx the parse tree
+	 */
+	void enterArgument(FlaskPythonParser.ArgumentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FlaskPythonParser#argument}.
+	 * @param ctx the parse tree
+	 */
+	void exitArgument(FlaskPythonParser.ArgumentContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link FlaskPythonParser#atom}.
 	 * @param ctx the parse tree
 	 */
@@ -167,6 +207,16 @@ public interface FlaskPythonParserListener extends ParseTreeListener {
 	 */
 	void exitDictLiteral(FlaskPythonParser.DictLiteralContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link FlaskPythonParser#dictEntry}.
+	 * @param ctx the parse tree
+	 */
+	void enterDictEntry(FlaskPythonParser.DictEntryContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FlaskPythonParser#dictEntry}.
+	 * @param ctx the parse tree
+	 */
+	void exitDictEntry(FlaskPythonParser.DictEntryContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link FlaskPythonParser#listLiteral}.
 	 * @param ctx the parse tree
 	 */
@@ -176,14 +226,4 @@ public interface FlaskPythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitListLiteral(FlaskPythonParser.ListLiteralContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link FlaskPythonParser#argument}.
-	 * @param ctx the parse tree
-	 */
-	void enterArgument(FlaskPythonParser.ArgumentContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link FlaskPythonParser#argument}.
-	 * @param ctx the parse tree
-	 */
-	void exitArgument(FlaskPythonParser.ArgumentContext ctx);
 }

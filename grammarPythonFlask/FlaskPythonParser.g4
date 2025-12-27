@@ -6,20 +6,42 @@ options {
 
 // =================== ENTRY ====================
 program
-    : statement* EOF
+    : (NEWLINE | INDENT | DEDENT | statement)* EOF
     ;
 
+
 // =================== STATEMENTS ===================
+// Consume trailing NEWLINEs after every statement
 statement
+    : simpleStmt NEWLINE*
+    | compoundStmt NEWLINE*
+    ;
+
+// =================== SIMPLE STATEMENTS ===================
+simpleStmt
     : importStmt
     | fromImportStmt
     | assignment
-    | functionDef
-    | decorator
-    | ifStmt
-    | forStmt
     | returnStmt
     | expr
+    ;
+
+// =================== COMPOUND STATEMENTS ===================
+// Decorators must bind to the following function
+compoundStmt
+    : decoratedDef
+    | functionDef
+    | ifStmt
+    | forStmt
+    ;
+
+// =================== DECORATORS ===================
+decoratedDef
+    : decorator+ functionDef
+    ;
+
+decorator
+    : AT expr NEWLINE+
     ;
 
 // =================== IMPORTS ===================
@@ -45,12 +67,7 @@ paramList
     : IDENT (COMMA IDENT)*
     ;
 
-// =================== DECORATORS ===================
-decorator
-    : AT expr
-    ;
-
-// =================== CONTROL ===================
+// =================== CONTROL FLOW ===================
 ifStmt
     : IF expr COLON suite
     ;
@@ -63,13 +80,13 @@ returnStmt
     : RETURN expr
     ;
 
-// =================== BLOCK ===================
+// =================== BLOCK (REAL PYTHON) ===================
 suite
-    : NEWLINE statement+
-    | statement
+    : NEWLINE INDENT statement+ DEDENT
     ;
 
 // =================== EXPRESSIONS ===================
+// Left-recursive is intentional and works with ANTLR4
 expr
     : atom
     | expr DOT IDENT
@@ -81,8 +98,14 @@ expr
     | expr EQEQ expr
     ;
 
+// =================== ARGUMENTS ===================
 argList
     : argument (COMMA argument)*
+    ;
+
+argument
+    : IDENT ASSIGN expr
+    | expr
     ;
 
 // =================== ATOMS ===================
@@ -99,16 +122,22 @@ atom
     ;
 
 // =================== COLLECTIONS ===================
+// Handles multiline Python dicts with indentation
 dictLiteral
-    : LBRACE (STRING COLON expr (COMMA STRING COLON expr)*)? RBRACE
+    : LBRACE
+      (NEWLINE INDENT)?                 // "{\n    "
+      NEWLINE*
+      (dictEntry (COMMA NEWLINE* dictEntry)* COMMA?)?
+      NEWLINE*
+      (DEDENT)?
+      RBRACE
     ;
 
+dictEntry
+    : expr COLON expr
+    ;
+
+// List literals (single-line is enough for Flask sample)
 listLiteral
     : LBRACK (expr (COMMA expr)*)? RBRACK
-    ;
-
-
-argument
-    : expr
-    | IDENT ASSIGN expr
     ;
