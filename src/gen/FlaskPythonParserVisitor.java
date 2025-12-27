@@ -1,4 +1,4 @@
-// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
+package gen;// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -21,6 +21,30 @@ public interface FlaskPythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStatement(FlaskPythonParser.StatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FlaskPythonParser#simpleStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSimpleStmt(FlaskPythonParser.SimpleStmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FlaskPythonParser#compoundStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCompoundStmt(FlaskPythonParser.CompoundStmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FlaskPythonParser#decoratedDef}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDecoratedDef(FlaskPythonParser.DecoratedDefContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FlaskPythonParser#decorator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDecorator(FlaskPythonParser.DecoratorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FlaskPythonParser#importStmt}.
 	 * @param ctx the parse tree
@@ -51,12 +75,6 @@ public interface FlaskPythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParamList(FlaskPythonParser.ParamListContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link FlaskPythonParser#decorator}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDecorator(FlaskPythonParser.DecoratorContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FlaskPythonParser#ifStmt}.
 	 * @param ctx the parse tree
@@ -94,6 +112,12 @@ public interface FlaskPythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArgList(FlaskPythonParser.ArgListContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link FlaskPythonParser#argument}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgument(FlaskPythonParser.ArgumentContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link FlaskPythonParser#atom}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -106,15 +130,15 @@ public interface FlaskPythonParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDictLiteral(FlaskPythonParser.DictLiteralContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link FlaskPythonParser#dictEntry}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDictEntry(FlaskPythonParser.DictEntryContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link FlaskPythonParser#listLiteral}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitListLiteral(FlaskPythonParser.ListLiteralContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link FlaskPythonParser#argument}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArgument(FlaskPythonParser.ArgumentContext ctx);
 }

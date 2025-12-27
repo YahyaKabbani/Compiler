@@ -1,4 +1,4 @@
-// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
+package gen;// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -35,6 +35,54 @@ public class FlaskPythonParserBaseListener implements FlaskPythonParserListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStatement(FlaskPythonParser.StatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSimpleStmt(FlaskPythonParser.SimpleStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSimpleStmt(FlaskPythonParser.SimpleStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCompoundStmt(FlaskPythonParser.CompoundStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCompoundStmt(FlaskPythonParser.CompoundStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDecoratedDef(FlaskPythonParser.DecoratedDefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDecoratedDef(FlaskPythonParser.DecoratedDefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDecorator(FlaskPythonParser.DecoratorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDecorator(FlaskPythonParser.DecoratorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -95,18 +143,6 @@ public class FlaskPythonParserBaseListener implements FlaskPythonParserListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitParamList(FlaskPythonParser.ParamListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDecorator(FlaskPythonParser.DecoratorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDecorator(FlaskPythonParser.DecoratorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -184,6 +220,18 @@ public class FlaskPythonParserBaseListener implements FlaskPythonParserListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArgument(FlaskPythonParser.ArgumentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArgument(FlaskPythonParser.ArgumentContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAtom(FlaskPythonParser.AtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -208,6 +256,18 @@ public class FlaskPythonParserBaseListener implements FlaskPythonParserListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDictEntry(FlaskPythonParser.DictEntryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDictEntry(FlaskPythonParser.DictEntryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterListLiteral(FlaskPythonParser.ListLiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -215,18 +275,6 @@ public class FlaskPythonParserBaseListener implements FlaskPythonParserListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitListLiteral(FlaskPythonParser.ListLiteralContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArgument(FlaskPythonParser.ArgumentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArgument(FlaskPythonParser.ArgumentContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
