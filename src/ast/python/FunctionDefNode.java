@@ -41,4 +41,22 @@ public class FunctionDefNode extends ASTNode {
             stmt.print(indent + "    ");
         }
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getParams() {
+        return params;
+    }
+
+    public List<ASTNode> getBody() {
+        return body;
+    }
+
+    public List<ASTNode> getDecorators() {
+        return decorators;
+    }
+
+
 }

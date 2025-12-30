@@ -20,4 +20,13 @@ public class HtmlTagNode extends ASTNode {
             child.print(indent + "  ");
         }
     }
+
+    public String getTagName() {
+        return tagName;
+    }
+
+    public List<ASTNode> getChildren() {
+        return children;
+    }
+
 }

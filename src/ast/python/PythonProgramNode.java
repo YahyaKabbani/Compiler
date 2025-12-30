@@ -19,4 +19,9 @@ public class PythonProgramNode extends ASTNode {
             stmt.print(indent + "  ");
         }
     }
+
+    public List<ASTNode> getStatements() {
+        return statements;
+    }
+
 }

@@ -15,4 +15,10 @@ public class NameNode extends ASTNode {
     public void print(String indent) {
         System.out.println(indent + nodeName + "(" + name + ") @line " + line);
     }
+
+    public String getName() {
+        return name;
+    }
+
+
 }
