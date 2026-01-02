@@ -11,7 +11,6 @@ public class ASTPrinter {
         }
     }
 
-    // دالة مساعدة لطباعة الأبناء مع رموز الشجرة
     public static void printChildren(List<ASTNode> children, String indent) {
         if (children == null) return;
         for (int i = 0; i < children.size(); i++) {

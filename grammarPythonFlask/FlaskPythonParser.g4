@@ -4,20 +4,19 @@ options {
     tokenVocab = FlaskPythonLexer;
 }
 
-// =================== ENTRY ====================
+// ENTRY
 program
     : (NEWLINE | INDENT | DEDENT | statement)* EOF
     ;
 
 
-// =================== STATEMENTS ===================
-// Consume trailing NEWLINEs after every statement
+// STATEMENTS
 statement
     : simpleStmt NEWLINE*
     | compoundStmt NEWLINE*
     ;
 
-// =================== SIMPLE STATEMENTS ===================
+//SIMPLE STATEMENTS
 simpleStmt
     : importStmt
     | fromImportStmt
@@ -26,8 +25,7 @@ simpleStmt
     | expr
     ;
 
-// =================== COMPOUND STATEMENTS ===================
-// Decorators must bind to the following function
+// COMPOUND STATEMENTS
 compoundStmt
     : decoratedDef
     | functionDef
@@ -35,7 +33,7 @@ compoundStmt
     | forStmt
     ;
 
-// =================== DECORATORS ===================
+// DECORATORS
 decoratedDef
     : decorator+ functionDef
     ;
@@ -44,7 +42,7 @@ decorator
     : AT expr NEWLINE+
     ;
 
-// =================== IMPORTS ===================
+// IMPORTS
 importStmt
     : IMPORT IDENT (COMMA IDENT)*
     ;
@@ -53,12 +51,12 @@ fromImportStmt
     : FROM IDENT IMPORT IDENT (COMMA IDENT)*
     ;
 
-// =================== ASSIGNMENT ===================
+// ASSIGNMENT
 assignment
     : IDENT ASSIGN expr
     ;
 
-// =================== FUNCTIONS ===================
+// FUNCTIONS
 functionDef
     : DEF IDENT LPAREN paramList? RPAREN COLON suite
     ;
@@ -67,7 +65,7 @@ paramList
     : IDENT (COMMA IDENT)*
     ;
 
-// =================== CONTROL FLOW ===================
+//  CONTROL FLOW
 ifStmt
     : IF expr COLON suite
     ;
@@ -80,13 +78,12 @@ returnStmt
     : RETURN expr
     ;
 
-// =================== BLOCK (REAL PYTHON) ===================
+// BLOCK (REAL PYTHON)
 suite
     : NEWLINE INDENT statement+ DEDENT
     ;
 
-// =================== EXPRESSIONS ===================
-// Left-recursive is intentional and works with ANTLR4
+//  EXPRESSIONS
 expr
     : atom
     | expr DOT IDENT
@@ -98,7 +95,7 @@ expr
     | expr EQEQ expr
     ;
 
-// =================== ARGUMENTS ===================
+// ARGUMENTS
 argList
     : argument (COMMA argument)*
     ;
@@ -108,7 +105,7 @@ argument
     | expr
     ;
 
-// =================== ATOMS ===================
+//  ATOMS
 atom
     : IDENT
     | STRING
@@ -121,8 +118,7 @@ atom
     | LPAREN expr RPAREN
     ;
 
-// =================== COLLECTIONS ===================
-// Handles multiline Python dicts with indentation
+//  COLLECTIONS
 dictLiteral
     : LBRACE
       (NEWLINE INDENT)?                 // "{\n    "
@@ -137,7 +133,7 @@ dictEntry
     : expr COLON expr
     ;
 
-// List literals (single-line is enough for Flask sample)
+
 listLiteral
     : LBRACK (expr (COMMA expr)*)? RBRACK
     ;

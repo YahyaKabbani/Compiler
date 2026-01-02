@@ -2,9 +2,7 @@ lexer grammar FlaskPythonLexer;
 
 tokens { INDENT, DEDENT }
 
-// ======================================================
-// INDENT / DEDENT ENGINE (INLINE, STABLE)
-// ======================================================
+
 @members {
     private java.util.LinkedList<Token> pending = new java.util.LinkedList<>();
     private java.util.Stack<Integer> indents = new java.util.Stack<>();
@@ -75,7 +73,7 @@ tokens { INDENT, DEDENT }
     }
 }
 
-// =================== KEYWORDS ===================
+// KEYWORDS
 FROM    : 'from';
 IMPORT  : 'import';
 DEF     : 'def';
@@ -87,14 +85,14 @@ TRUE    : 'True';
 FALSE   : 'False';
 NONE    : 'None';
 
-// =================== OPERATORS ===================
+// OPERATORS
 EQEQ    : '==';
 ASSIGN  : '=';
 PLUS    : '+';
 GT      : '>';
 LT      : '<';
 
-// =================== SYMBOLS ===================
+// SYMBOLS
 AT      : '@';
 LPAREN  : '(';
 RPAREN  : ')';
@@ -106,7 +104,7 @@ COLON   : ':';
 COMMA   : ',';
 DOT     : '.';
 
-// =================== LITERALS ===================
+// LITERALS
 NUMBER  : [0-9]+;
 
 STRING
@@ -114,18 +112,18 @@ STRING
     | '\'' (~['\r\n])* '\''
     ;
 
-// =================== IDENTIFIERS ===================
+// IDENTIFIERS
 IDENT   : [a-zA-Z_][a-zA-Z0-9_]*;
 
-// =================== COMMENTS ===================
+// COMMENTS
 COMMENT : '#' ~[\r\n]* -> skip;
 
-// =================== NEWLINE ===================
+// NEWLINE
 NEWLINE
     : '\r'? '\n' [ \t]*
     ;
 
-// =================== WS ===================
+//  WS
 WS
     : [ \t]+ -> skip
     ;
