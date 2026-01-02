@@ -14,7 +14,7 @@ public class PythonProgramNode extends ASTNode {
 
     @Override
     public void print(String indent) {
-        System.out.println(indent + nodeName);
+        System.out.println(indent + "PythonProgram");
         for (ASTNode stmt : statements) {
             stmt.print(indent + "  ");
         }
@@ -23,5 +23,4 @@ public class PythonProgramNode extends ASTNode {
     public List<ASTNode> getStatements() {
         return statements;
     }
-
 }

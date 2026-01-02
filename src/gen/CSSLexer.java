@@ -1,4 +1,4 @@
-package gen;// Generated from C:/Users/yazan/OneDrive/Desktop/Compiler/grammersCSS/CSSLexer.g4 by ANTLR 4.13.2
+package gen;// Generated from C:/Users/VISION/Desktop/compiler/Compiler/grammersCSS/CSSLexer.g4 by ANTLR 4.13.2
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATN;

@@ -1,6 +1,4 @@
- lexer grammar HTMLJinja2Lexer;
-
-
+lexer grammar HTMLJinja2Lexer;
 
 // =======================
 // JINJA2 TOKENS
@@ -18,7 +16,6 @@ JINJA_COMMENT
     : '{#' .*? '#}'
     ;
 
-
 HTML_COMMENT: '<!--' .*? '-->';
 
 HTML_CONDITIONAL_COMMENT: '<![' .*? ']>';
@@ -27,7 +24,9 @@ XML: '<?xml' .*? '>';
 
 CDATA: '<![CDATA[' .*? ']]>';
 
-DTD: '<!' .*? '>';
+DTD
+    : '<!' .*? '>'
+    ;
 
 SCRIPTLET: '<?' .*? '?>' | '<%' .*? '%>';
 
@@ -39,9 +38,7 @@ STYLE_OPEN: '<style' .*? '>' -> pushMode(STYLE);
 
 TAG_OPEN: '<' -> pushMode(TAG);
 
-HTML_TEXT
-    : ~[<{]+
-    ;
+HTML_TEXT: ~[<{]+;
 
 // tag declarations
 
@@ -52,8 +49,6 @@ TAG_CLOSE: '>' -> popMode;
 TAG_SLASH_CLOSE: '/>' -> popMode;
 
 TAG_SLASH: '/';
-
-// lexing mode for attribute values
 
 TAG_EQUALS: '=' -> pushMode(ATTVALUE);
 
@@ -93,6 +88,11 @@ SCRIPT_BODY
     : (JINJA_EXPR | JINJA_STMT | .)*? '</script>' -> popMode
     ;
 
+// تعريف SCRIPT_SHORT_BODY لتجنب التحذير
+SCRIPT_SHORT_BODY
+    : .*? '</script>'
+    ;
+
 // <styles>
 
 mode STYLE;
@@ -108,7 +108,6 @@ mode ATTVALUE;
 ATTVALUE_VALUE
     : ' '* (ATTRIBUTE | JINJA_EXPR) -> popMode
     ;
-
 
 ATTRIBUTE: DOUBLE_QUOTE_STRING | SINGLE_QUOTE_STRING | ATTCHARS | HEXCHARS | DECCHARS;
 

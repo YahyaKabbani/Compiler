@@ -1,4 +1,4 @@
-package gen;// Generated from C:/Users/VISION/Desktop/compiler/Compiler/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
+// Generated from C:/Users/VISION/Desktop/compiler/Compiler/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

@@ -1,16 +1,12 @@
-package gen;// Generated from C:/Users/VISION/Desktop/compiler/Compiler/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
-
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.ATN;
-import org.antlr.v4.runtime.atn.ATNDeserializer;
-import org.antlr.v4.runtime.atn.ParserATNSimulator;
-import org.antlr.v4.runtime.atn.PredictionContextCache;
+// Generated from C:/Users/VISION/Desktop/compiler/Compiler/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
+import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.ParseTreeVisitor;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.*;
+import org.antlr.v4.runtime.tree.*;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class FlaskPythonParser extends Parser {
@@ -137,15 +133,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_program; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterProgram(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterProgram(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitProgram(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitProgram(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitProgram(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitProgram(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -245,15 +241,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_statement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterStatement(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterStatement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitStatement(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitStatement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitStatement(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitStatement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -285,7 +281,7 @@ public class FlaskPythonParser extends Parser {
 				setState(59);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
-				while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
+				while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 					if ( _alt==1 ) {
 						{
 						{
@@ -311,7 +307,7 @@ public class FlaskPythonParser extends Parser {
 				setState(66);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
-				while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
+				while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 					if ( _alt==1 ) {
 						{
 						{
@@ -364,15 +360,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_simpleStmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterSimpleStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterSimpleStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitSimpleStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitSimpleStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitSimpleStmt(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitSimpleStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -452,15 +448,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_compoundStmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterCompoundStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterCompoundStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitCompoundStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitCompoundStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitCompoundStmt(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitCompoundStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -532,15 +528,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_decoratedDef; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterDecoratedDef(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterDecoratedDef(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitDecoratedDef(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitDecoratedDef(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitDecoratedDef(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitDecoratedDef(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -597,15 +593,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_decorator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterDecorator(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterDecorator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitDecorator(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitDecorator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitDecorator(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitDecorator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -665,15 +661,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_importStmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterImportStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterImportStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitImportStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitImportStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitImportStmt(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitImportStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -736,15 +732,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_fromImportStmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterFromImportStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterFromImportStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitFromImportStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitFromImportStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitFromImportStmt(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitFromImportStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -806,15 +802,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_assignment; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterAssignment(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterAssignment(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitAssignment(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitAssignment(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitAssignment(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitAssignment(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -863,15 +859,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_functionDef; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterFunctionDef(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterFunctionDef(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitFunctionDef(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitFunctionDef(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitFunctionDef(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitFunctionDef(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -934,15 +930,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_paramList; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterParamList(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterParamList(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitParamList(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitParamList(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitParamList(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitParamList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1001,15 +997,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_ifStmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterIfStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterIfStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitIfStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitIfStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitIfStmt(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitIfStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1059,15 +1055,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_forStmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterForStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterForStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitForStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitForStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitForStmt(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitForStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1115,15 +1111,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_returnStmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterReturnStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterReturnStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitReturnStmt(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitReturnStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitReturnStmt(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitReturnStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1168,15 +1164,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_suite; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterSuite(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterSuite(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitSuite(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitSuite(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitSuite(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitSuite(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1251,15 +1247,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterExpr(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterExpr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitExpr(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitExpr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitExpr(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1288,7 +1284,7 @@ public class FlaskPythonParser extends Parser {
 			setState(195);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
-			while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
@@ -1430,15 +1426,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_argList; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterArgList(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterArgList(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitArgList(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitArgList(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitArgList(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitArgList(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1494,15 +1490,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_argument; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterArgument(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterArgument(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitArgument(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitArgument(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitArgument(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitArgument(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1570,15 +1566,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_atom; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterAtom(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterAtom(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitAtom(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitAtom(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitAtom(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitAtom(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1698,15 +1694,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_dictLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterDictLiteral(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterDictLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitDictLiteral(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitDictLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitDictLiteral(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitDictLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1736,7 +1732,7 @@ public class FlaskPythonParser extends Parser {
 			setState(234);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
-			while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
@@ -1759,7 +1755,7 @@ public class FlaskPythonParser extends Parser {
 				setState(248);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
-				while ( _alt!=2 && _alt!= ATN.INVALID_ALT_NUMBER ) {
+				while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 					if ( _alt==1 ) {
 						{
 						{
@@ -1855,15 +1851,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_dictEntry; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterDictEntry(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterDictEntry(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitDictEntry(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitDictEntry(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitDictEntry(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitDictEntry(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1913,15 +1909,15 @@ public class FlaskPythonParser extends Parser {
 		@Override public int getRuleIndex() { return RULE_listLiteral; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).enterListLiteral(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).enterListLiteral(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof FlaskPythonParserListener) ((FlaskPythonParserListener)listener).exitListLiteral(this);
+			if ( listener instanceof FlaskPythonParserListener ) ((FlaskPythonParserListener)listener).exitListLiteral(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FlaskPythonParserVisitor) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitListLiteral(this);
+			if ( visitor instanceof FlaskPythonParserVisitor ) return ((FlaskPythonParserVisitor<? extends T>)visitor).visitListLiteral(this);
 			else return visitor.visitChildren(this);
 		}
 	}
