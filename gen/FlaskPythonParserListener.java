@@ -1,4 +1,4 @@
-package gen;// Generated from D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/projects/Antlr - Copy/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
+// Generated from D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/projects/Antlr - Copy/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
