@@ -1,7 +1,5 @@
 package ast;
-
 public abstract class ASTNode {
-
     protected String nodeName;
     protected int line;
 
@@ -9,9 +7,6 @@ public abstract class ASTNode {
         this.nodeName = nodeName;
         this.line = line;
     }
-    public int getLine() {
-        return line;
-    }
-
+    public int getLine() { return line; }
     public abstract void print(String indent);
 }
