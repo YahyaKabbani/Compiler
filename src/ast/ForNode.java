@@ -19,6 +19,14 @@ public class ForNode extends ASTNode {
         return body;
     }
 
+    public String getVariable() {
+        return variable;
+    }
+
+    public String getIterable() {
+        return iterable;
+    }
+
     @Override
     public void print(String indent) {
         System.out.println(indent + "FOR " + variable + " IN " + iterable);

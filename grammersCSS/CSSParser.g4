@@ -24,7 +24,7 @@ imports
     ;
 
 // Namespaces
-// https://www.w3.org/TR/css-namespaces-3/
+
 namespace_
     : Namespace ws (namespacePrefix ws)? (String_ | url) ws ';' ws # goodNamespace
     | Namespace ws (namespacePrefix ws)? ( String_ | url) ws       # badNamespace
@@ -35,7 +35,6 @@ namespacePrefix
     ;
 
 // Media queries
-// https://www.w3.org/TR/css3-mediaqueries/
 media
     : Media ws mediaQueryList groupRuleBody ws
     ;
@@ -72,7 +71,6 @@ pseudoPage
     ;
 
 // Selectors
-// https://www.w3.org/TR/css3-selectors/
 selectorGroup
     : selector (Comma ws selector)*
     ;
@@ -275,7 +273,7 @@ block
     ;
 
 // Conditional
-// https://www.w3.org/TR/css3-conditional/
+
 nestedStatement
     : ruleset
     | media
@@ -331,20 +329,17 @@ generalEnclosed
     ;
 
 // Url
-// https://www.w3.org/TR/css3-values/#urls
 url
     : Url_ ws String_ ws ')'
     | Url
     ;
 
 // Variable
-// https://www.w3.org/TR/css-variables-1
 var_
     : Var ws Variable ws ')' ws
     ;
 
 // Calc
-// https://www.w3.org/TR/css3-values/#calc-syntax
 calc
     : Calc ws calcSum ')' ws
     ;
@@ -366,7 +361,6 @@ calcValue
     ;
 
 // Font face
-// https://www.w3.org/TR/2013/CR-css-fonts-3-20131003/#font-face-rule
 fontFaceRule
     : FontFace ws '{' ws fontFaceDeclaration? (';' ws fontFaceDeclaration?)* '}' ws
     ;
@@ -377,7 +371,6 @@ fontFaceDeclaration
     ;
 
 // Animations
-// https://www.w3.org/TR/css3-animations/
 keyframesRule
     : Keyframes ws Space ws ident ws '{' ws keyframeBlock* '}' ws
     ;
@@ -391,19 +384,16 @@ keyframeSelector
     ;
 
 // Viewport
-// https://www.w3.org/TR/css-device-adapt-1/
 viewport
     : Viewport ws '{' ws declarationList? '}' ws
     ;
 
 // Counter style
-// https://www.w3.org/TR/css-counter-styles-3/
 counterStyle
     : CounterStyle ws ident ws '{' ws declarationList? '}' ws
     ;
 
 // Font feature values
-// https://www.w3.org/TR/css-fonts-3/
 fontFeatureValuesRule
     : FontFeatureValues ws fontFamilyNameList ws '{' ws featureValueBlock* '}' ws
     ;

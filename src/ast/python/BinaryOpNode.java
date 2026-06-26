@@ -21,4 +21,12 @@ public class BinaryOpNode extends ASTNode {
         left.print(indent + "  ");
         right.print(indent + "  ");
     }
+
+    public ASTNode getLeft() {
+        return left;
+    }
+
+    public ASTNode getRight() {
+        return right;
+    }
 }

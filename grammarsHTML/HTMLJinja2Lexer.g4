@@ -19,10 +19,10 @@ JINJA_COMMENT
 HTML_COMMENT: '<!--' .*? '-->';
 
 HTML_CONDITIONAL_COMMENT: '<![' .*? ']>';
-
-XML: '<?xml' .*? '>';
-
-CDATA: '<![CDATA[' .*? ']]>';
+//
+//XML: '<?xml' .*? '>';
+//
+//CDATA: '<![CDATA[' .*? ']]>';
 
 DTD
     : '<!' .*? '>'
@@ -88,7 +88,6 @@ SCRIPT_BODY
     : (JINJA_EXPR | JINJA_STMT | .)*? '</script>' -> popMode
     ;
 
-// تعريف SCRIPT_SHORT_BODY لتجنب التحذير
 SCRIPT_SHORT_BODY
     : .*? '</script>'
     ;

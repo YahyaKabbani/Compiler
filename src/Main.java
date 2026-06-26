@@ -1,10 +1,12 @@
 import ast.ASTNode;
 //import ast.ASTPrinter;
+import ast.ASTPrinter;
 import ast.HtmlDocumentNode;
 import gen.CSSLexer;
 import gen.CSSParser;
 import gen.HTMLJinja2Lexer;
 import gen.HTMLJinja2Parser;
+import gen.FlaskPythonLexer;
 import gen.FlaskPythonParser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -25,10 +27,69 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
+        String filePath = "app.py";
+
+        String input = Files.readString(Path.of(filePath));
+        CharStream charStream = CharStreams.fromString(input);
+        ASTNode ast = null;
+
+        if (filePath.endsWith(".css")) {
+            CSSLexer lexer = new CSSLexer(charStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            CSSParser parser = new CSSParser(tokens);
+            ParseTree tree = parser.stylesheet();
+            CSSASTBuilder builder = new CSSASTBuilder();
+            ast = builder.visit(tree);
+
+        } else if (filePath.endsWith(".html")) {
+            HTMLJinja2Lexer lexer = new HTMLJinja2Lexer(charStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            HTMLJinja2Parser parser = new HTMLJinja2Parser(tokens);
+            ParseTree tree = parser.htmlDocument();
+            HTMLASTBuilder builder = new HTMLASTBuilder();
+            ast = builder.visit(tree);
+
+            ast = ForLoopTransformer.transform((HtmlDocumentNode) ast);
+
+        } else if (filePath.endsWith(".py")) {
+            FlaskPythonLexer lexer = new FlaskPythonLexer(charStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            FlaskPythonParser parser = new FlaskPythonParser(tokens);
+            ParseTree tree = parser.program();
+            FlaskPythonASTBuilder builder = new FlaskPythonASTBuilder();
+            ast = builder.visit(tree);
+        } else {
+            System.out.println("File not supported");
+            return;
+        }
+
+        if (ast != null) {
+
+
+            System.out.println(" ABSTRACT SYNTAX TREE (AST) ==========================");
+            ASTPrinter.printTree(ast);
+
+
+            System.out.println(" SYMBOL TABLE ========================");
+            SymbolTableBuilder stb = new SymbolTableBuilder();
+            SymbolTable table = stb.build(ast);
+            table.dumpAll();
+
+
+        } else {
+            System.out.println("(AST is null)");
+        }
+
+
+
+
+
 
 
 //
-//            String html = Files.readString(Path.of("base.html"));
+//
+//
+//            String html = Files.readString(Path.of("index.html"));
 //            CharStream csHtml = CharStreams.fromString(html);
 //
 //            HTMLJinja2Lexer htmlLexer = new HTMLJinja2Lexer(csHtml);
@@ -45,6 +106,8 @@ public class Main {
 //            System.out.println("\n===== HTML SYMBOL TABLE =====");
 //            SymbolTable htmlTable = new SymbolTableBuilder().build(htmlAst);
 //            htmlTable.dumpAll();
+
+
 
 
 //

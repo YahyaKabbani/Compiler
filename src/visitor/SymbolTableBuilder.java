@@ -112,6 +112,63 @@ public class SymbolTableBuilder {
             ));
         }
 
+        if (node instanceof AssignmentNode a) {
+            table.define(new Symbol(
+                    a.getName(),
+                    SymbolKind.PYTHON_VARIABLE,
+                    a.getLine(),
+                    table.currentScope()
+            ));
+            visit(a.getValue());
+        }
+
+        if (node instanceof ReturnNode r) {
+            visit(r.getValue());
+        }
+
+        if (node instanceof CallNode c) {
+            visit(c.getTarget());
+            for (ASTNode arg : c.getArgs()) visit(arg);
+        }
+
+        if (node instanceof BinaryOpNode b) {
+            visit(b.getLeft());
+            visit(b.getRight());
+        }
+
+        if (node instanceof AttributeNode a) {
+            visit(a.getObject());
+        }
+
+        if (node instanceof IfNode ifn) {
+            visit(ifn.condition);
+            for (ASTNode stmt : ifn.body) visit(stmt);
+        }
+
+        if (node instanceof ast.python.ForNode f) {
+            table.define(new Symbol(
+                    f.var,
+                    SymbolKind.PYTHON_VARIABLE,
+                    f.getLine(),
+                    table.currentScope()
+            ));
+            visit(f.iterable);
+            for (ASTNode stmt : f.body) visit(stmt);
+        }
+
+        // ---------- HTML {% for %} (built by ForLoopTransformer) ----------
+        if (node instanceof ast.ForNode f) {
+            table.define(new Symbol(
+                    f.getVariable(),
+                    SymbolKind.JINJA_LOOP_VAR,
+                    f.getLine(),
+                    table.currentScope()
+            ));
+
+            table.enterScope("html-for:" + f.getVariable());
+            for (ASTNode child : f.getBody()) visit(child);
+            table.exitScope();
+        }
 
         // ---------- CSS ----------
         if (node instanceof CssStylesheetNode sheet) {

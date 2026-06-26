@@ -22,4 +22,12 @@ public class CallNode extends ASTNode {
             arg.print(indent + "    ");
         }
     }
+
+    public ASTNode getTarget() {
+        return target;
+    }
+
+    public List<ASTNode> getArgs() {
+        return args;
+    }
 }

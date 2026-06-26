@@ -119,8 +119,14 @@ IDENT   : [a-zA-Z_][a-zA-Z0-9_]*;
 COMMENT : '#' ~[\r\n]* -> skip;
 
 // NEWLINE
+// Blank lines (and lines that become blank once a trailing comment is
+// stripped) must NOT affect indentation: only the line that actually
+// precedes the next real token matters. Matching every run of
+// newline+whitespace as a single token means the backward whitespace
+// scan in nextToken() naturally lands on the indentation of that final
+// line, instead of on an intermediate blank line's zero indentation.
 NEWLINE
-    : '\r'? '\n' [ \t]*
+    : ('\r'? '\n' [ \t]*)+
     ;
 
 //  WS

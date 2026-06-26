@@ -19,4 +19,12 @@ public class AttributeNode extends ASTNode {
         object.print(indent + "  ");
         System.out.println(indent + "  ." + attribute);
     }
+
+    public ASTNode getObject() {
+        return object;
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
 }

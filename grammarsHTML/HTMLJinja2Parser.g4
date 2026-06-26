@@ -36,7 +36,7 @@ htmlElement
 htmlContent
     : htmlChardata?
       (
-        (htmlElement | CDATA | htmlComment | jinja)
+        (htmlElement | htmlComment | jinja)
         htmlChardata?
       )*
     ;

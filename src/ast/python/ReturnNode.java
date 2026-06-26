@@ -16,4 +16,8 @@ public class ReturnNode extends ASTNode {
         System.out.println(indent + nodeName + " @line " + line);
         value.print(indent + "  ");
     }
+
+    public ASTNode getValue() {
+        return value;
+    }
 }

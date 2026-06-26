@@ -18,4 +18,12 @@ public class AssignmentNode extends ASTNode {
         System.out.println(indent + "Assignment " + name);
         if (value != null) value.print(indent + "  ");
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public ASTNode getValue() {
+        return value;
+    }
 }
