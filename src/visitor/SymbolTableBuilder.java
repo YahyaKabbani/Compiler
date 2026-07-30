@@ -4,6 +4,9 @@ import ast.*;
 import ast.python.*;
 import symbol.*;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SymbolTableBuilder {
 
     private final SymbolTable table = new SymbolTable();
@@ -32,6 +35,20 @@ public class SymbolTableBuilder {
             ));
 
             table.enterScope("html:" + tag.getTagName());
+
+            // {{ variable }} inside attribute values, e.g. src="/x/{{ p.photo }}"
+            for (String attrValue : tag.getAttributes().values()) {
+                Matcher m = JINJA_EXPR_VAR.matcher(attrValue);
+                while (m.find()) {
+                    table.define(new Symbol(
+                            m.group(1),
+                            SymbolKind.JINJA_VARIABLE,
+                            tag.getLine(),
+                            table.currentScope()
+                    ));
+                }
+            }
+
             for (ASTNode c : tag.getChildren()) visit(c);
             table.exitScope();
         }
@@ -178,15 +195,21 @@ public class SymbolTableBuilder {
         }
 
         if (node instanceof CssRuleSetNode rule) {
-            String selector = rule.selector;
+            // a selector may be a comma-separated group of descendant chains,
+            // e.g. ".navbar a:hover, input" → navbar (class), a (tag), input (tag)
+            for (String group : rule.selector.split(",")) {
+                for (String part : group.trim().split("\\s+")) {
+                    String name = part.replaceAll(":.*$", "").trim(); // drop pseudo-class
+                    if (name.isEmpty()) continue;
 
-            // determine symbol kind
-            if (selector.startsWith(".")) {
-                table.define(new Symbol(selector.substring(1), SymbolKind.CSS_CLASS, rule.getLine(), table.currentScope()));
-            } else if (selector.startsWith("#")) {
-                table.define(new Symbol(selector.substring(1), SymbolKind.CSS_ID, rule.getLine(), table.currentScope()));
-            } else {
-                table.define(new Symbol(selector, SymbolKind.CSS_TAG, rule.getLine(), table.currentScope()));
+                    if (name.startsWith(".")) {
+                        table.define(new Symbol(name.substring(1), SymbolKind.CSS_CLASS, rule.getLine(), table.currentScope()));
+                    } else if (name.startsWith("#")) {
+                        table.define(new Symbol(name.substring(1), SymbolKind.CSS_ID, rule.getLine(), table.currentScope()));
+                    } else {
+                        table.define(new Symbol(name, SymbolKind.CSS_TAG, rule.getLine(), table.currentScope()));
+                    }
+                }
             }
         }
 
@@ -206,9 +229,15 @@ public class SymbolTableBuilder {
 
     private String extractForVariable(String content) {
         // {% for item in items %}
-        int forIdx = content.indexOf("for");
-        int inIdx = content.indexOf("in");
-        if (forIdx == -1 || inIdx == -1) return null;
-        return content.substring(forIdx + 3, inIdx).trim();
+        Matcher m = JINJA_FOR_VAR.matcher(content);
+        return m.find() ? m.group(1) : null;
     }
+
+    // root identifier of a jinja expression: {{ p.photo }} → p
+    private static final Pattern JINJA_EXPR_VAR =
+            Pattern.compile("\\{\\{\\s*([A-Za-z_]\\w*)");
+
+    // loop variable of a jinja for: {% for index in items %} → index
+    private static final Pattern JINJA_FOR_VAR =
+            Pattern.compile("\\bfor\\s+([A-Za-z_]\\w*)\\s+in\\b");
 }

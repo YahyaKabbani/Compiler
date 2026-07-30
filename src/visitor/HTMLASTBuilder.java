@@ -39,6 +39,16 @@ public class HTMLASTBuilder
         if (ctx.TAG_OPEN() != null && ctx.TAG_NAME() != null && !ctx.TAG_NAME().isEmpty()) {
 
             String tag = ctx.TAG_NAME(0).getText();
+
+            Map<String, String> attributes = new LinkedHashMap<>();
+            for (var attrCtx : ctx.htmlAttribute()) {
+                String attrName = attrCtx.TAG_NAME().getText();
+                String attrValue = attrCtx.ATTVALUE_VALUE() != null
+                        ? attrCtx.ATTVALUE_VALUE().getText()
+                        : "";
+                attributes.put(attrName, attrValue);
+            }
+
             List<ASTNode> children = new ArrayList<>();
 
             if (ctx.htmlContent() != null && ctx.htmlContent().children != null) {
@@ -51,7 +61,7 @@ public class HTMLASTBuilder
             }
 
 
-            return new HtmlTagNode(tag, children, ctx.start.getLine());
+            return new HtmlTagNode(tag, attributes, children, ctx.start.getLine());
         }
 
         // CASE 2: jinja inside htmlElement

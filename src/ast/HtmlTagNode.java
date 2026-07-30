@@ -1,15 +1,23 @@
 package ast;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HtmlTagNode extends ASTNode {
 
     public String tagName;
     public List<ASTNode> children;
+    public Map<String, String> attributes;
 
     public HtmlTagNode(String tagName, List<ASTNode> children, int line) {
+        this(tagName, new LinkedHashMap<>(), children, line);
+    }
+
+    public HtmlTagNode(String tagName, Map<String, String> attributes, List<ASTNode> children, int line) {
         super("HtmlTag", line);
         this.tagName = tagName;
+        this.attributes = attributes;
         this.children = children;
     }
 
@@ -27,6 +35,10 @@ public class HtmlTagNode extends ASTNode {
 
     public List<ASTNode> getChildren() {
         return children;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
     }
 
 }
