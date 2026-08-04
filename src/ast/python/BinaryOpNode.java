@@ -29,4 +29,7 @@ public class BinaryOpNode extends ASTNode {
     public ASTNode getRight() {
         return right;
     }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

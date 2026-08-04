@@ -30,4 +30,7 @@ public class CallNode extends ASTNode {
     public List<ASTNode> getArgs() {
         return args;
     }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

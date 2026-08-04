@@ -16,8 +16,11 @@ public class HtmlDocumentNode extends ASTNode {
     }
 
     @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
+
+    @Override
     public void print(String indent) {
-        System.out.println(indent + "HtmlDocument (line " + line + ")");
+        System.out.println(indent + "HtmlDocument (line " + getLine() + ")");
         for (ASTNode child : children) {
             child.print(indent + "  ");
         }

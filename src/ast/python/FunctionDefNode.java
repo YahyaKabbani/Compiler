@@ -26,7 +26,7 @@ public class FunctionDefNode extends ASTNode {
 
     @Override
     public void print(String indent) {
-        System.out.println(indent + nodeName + " " + name + " @line " + line);
+        System.out.println(indent + getNodeName() + " " + name + " @line " + getLine());
 
         if (!decorators.isEmpty()) {
             System.out.println(indent + "  Decorators:");
@@ -58,5 +58,6 @@ public class FunctionDefNode extends ASTNode {
         return decorators;
     }
 
-
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

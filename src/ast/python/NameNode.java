@@ -13,12 +13,13 @@ public class NameNode extends ASTNode {
 
     @Override
     public void print(String indent) {
-        System.out.println(indent + nodeName + "(" + name + ") @line " + line);
+        System.out.println(indent + getNodeName() + "(" + name + ") @line " + getLine());
     }
 
     public String getName() {
         return name;
     }
 
-
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

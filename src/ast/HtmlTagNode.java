@@ -6,9 +6,9 @@ import java.util.Map;
 
 public class HtmlTagNode extends ASTNode {
 
-    public String tagName;
-    public List<ASTNode> children;
-    public Map<String, String> attributes;
+    private final String tagName;
+    private final List<ASTNode> children;
+    private final Map<String, String> attributes;
 
     public HtmlTagNode(String tagName, List<ASTNode> children, int line) {
         this(tagName, new LinkedHashMap<>(), children, line);
@@ -23,7 +23,7 @@ public class HtmlTagNode extends ASTNode {
 
     @Override
     public void print(String indent) {
-        System.out.println(indent + "<" + tagName + "> (line " + line + ")");
+        System.out.println(indent + "<" + tagName + "> (line " + getLine() + ")");
         for (ASTNode child : children) {
             child.print(indent + "  ");
         }
@@ -41,4 +41,6 @@ public class HtmlTagNode extends ASTNode {
         return attributes;
     }
 
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

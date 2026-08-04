@@ -23,4 +23,7 @@ public class PythonProgramNode extends ASTNode {
     public List<ASTNode> getStatements() {
         return statements;
     }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

@@ -16,7 +16,9 @@ import symbol.SymbolTable;
 import visitor.CSSASTBuilder;
 import visitor.ForLoopTransformer;
 import visitor.HTMLASTBuilder;
+import visitor.JinjaContextLinker;
 import visitor.SymbolTableBuilder;
+import visitor.ContextExtractor;
 import visitor.FlaskPythonASTBuilder;
 
 import java.nio.file.Files;
@@ -27,8 +29,9 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
 
-        String filePath = "app.py";
-
+        String filePath = "index.html";
+//        String filePath = "app.py";
+//        String filePath = "test.css";
         String input = Files.readString(Path.of(filePath));
         CharStream charStream = CharStreams.fromString(input);
         ASTNode ast = null;
@@ -50,6 +53,24 @@ public class Main {
             ast = builder.visit(tree);
 
             ast = ForLoopTransformer.transform((HtmlDocumentNode) ast);
+
+            // ربط بيانات Python بشجرة HTML
+            String pySource = Files.readString(Path.of("app.py"));
+            FlaskPythonLexer pyLexer = new FlaskPythonLexer(CharStreams.fromString(pySource));
+            FlaskPythonParser pyParser = new FlaskPythonParser(new CommonTokenStream(pyLexer));
+            ASTNode pyAst = new FlaskPythonASTBuilder().visit(pyParser.program());
+
+            ContextExtractor extractor = new ContextExtractor();
+            String templateName = Path.of(filePath).getFileName().toString();
+            java.util.Map<String, String> context = extractor.extract(pyAst).get(templateName);
+
+            System.out.println(" PYTHON CONTEXT FOR " + templateName + " ==========================");
+            if (context != null) {
+                context.forEach((k, v) -> System.out.println("  " + k + " = " + v));
+                JinjaContextLinker.link(ast, context);
+            } else {
+                System.out.println("  (no context found for " + templateName + ")");
+            }
 
         } else if (filePath.endsWith(".py")) {
             FlaskPythonLexer lexer = new FlaskPythonLexer(charStream);
@@ -75,15 +96,16 @@ public class Main {
             SymbolTable table = stb.build(ast);
             table.dumpAll();
 
+            if (filePath.endsWith(".py")) {
+                System.out.println(" CONTEXT EXTRACTOR ==========================");
+                ContextExtractor extractor = new ContextExtractor();
+                extractor.extract(ast);
+                extractor.dump();
+            }
 
         } else {
             System.out.println("(AST is null)");
         }
-
-
-
-
-
 
 
 //
@@ -106,8 +128,6 @@ public class Main {
 //            System.out.println("\n===== HTML SYMBOL TABLE =====");
 //            SymbolTable htmlTable = new SymbolTableBuilder().build(htmlAst);
 //            htmlTable.dumpAll();
-
-
 
 
 //
@@ -139,7 +159,6 @@ public class Main {
 //            table.dumpAll();
 
 
-
 //
 //
 //        String input = Files.readString(Path.of("test.css"));
@@ -165,8 +184,6 @@ public class Main {
 //        SymbolTable table = stb.build(ast);
 //        table.dumpAll();
 //
-
-
 
 
     }

@@ -2,10 +2,10 @@ package symbol;
 
 public class Symbol {
 
-    public final String name;
-    public final SymbolKind kind;
-    public final int line;
-    public final Scope scope;
+    private final String name;
+    private final SymbolKind kind;
+    private final int line;
+    private final Scope scope;
 
     public Symbol(String name, SymbolKind kind, int line, Scope scope) {
         this.name = name;
@@ -13,6 +13,11 @@ public class Symbol {
         this.line = line;
         this.scope = scope;
     }
+
+    public String getName()    { return name; }
+    public SymbolKind getKind() { return kind; }
+    public int getLine()       { return line; }
+    public Scope getScope()    { return scope; }
 
     @Override
     public String toString() {

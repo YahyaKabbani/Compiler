@@ -13,11 +13,14 @@ public class ReturnNode extends ASTNode {
 
     @Override
     public void print(String indent) {
-        System.out.println(indent + nodeName + " @line " + line);
+        System.out.println(indent + getNodeName() + " @line " + getLine());
         value.print(indent + "  ");
     }
 
     public ASTNode getValue() {
         return value;
     }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

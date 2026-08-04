@@ -33,6 +33,26 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
         return null;
     }
 
+    // ================= DECORATED FUNCTION =================
+
+    @Override
+    public ASTNode visitDecoratedDef(FlaskPythonParser.DecoratedDefContext ctx) {
+        List<ASTNode> decorators = new ArrayList<>();
+        for (var dec : ctx.decorator()) {
+            ASTNode decNode = visit(dec.expr());
+            if (decNode != null) decorators.add(decNode);
+        }
+
+        FunctionDefNode funcNode = (FunctionDefNode) visitFunctionDef(ctx.functionDef());
+        return new FunctionDefNode(
+                funcNode.getName(),
+                funcNode.getParams(),
+                funcNode.getBody(),
+                decorators,
+                funcNode.getLine()
+        );
+    }
+
     // ================= FUNCTIONS =================
 
     @Override
@@ -55,7 +75,7 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
                 name,
                 params,
                 body,
-                List.of(), // decorators later (optional)
+                List.of(),
                 line
         );
     }
@@ -82,13 +102,15 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
     }
 
     // ================= ARGUMENT =================
-    // IMPORTANT: ensures args always become AST nodes (especially keyword args)
     @Override
     public ASTNode visitArgument(FlaskPythonParser.ArgumentContext ctx) {
-        // keyword arg: IDENT ASSIGN expr  (e.g. debug=True)
+        // keyword arg: IDENT ASSIGN expr  (e.g. products=read())
         if (ctx.IDENT() != null && ctx.ASSIGN() != null) {
-            // If you don't have a KeywordArgNode class, just return the value for now:
-            return visit(ctx.expr());
+            return new KeywordArgumentNode(
+                    ctx.IDENT().getText(),
+                    visit(ctx.expr()),
+                    ctx.start.getLine()
+            );
         }
         // positional arg: expr
         return visit(ctx.expr());

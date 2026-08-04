@@ -14,7 +14,7 @@ public class Scope {
     }
 
     public void define(Symbol sym) {
-        symbols.computeIfAbsent(sym.name, k -> new ArrayList<>()).add(sym);
+        symbols.computeIfAbsent(sym.getName(), k -> new ArrayList<>()).add(sym);
     }
 
     public Symbol resolve(String name) {

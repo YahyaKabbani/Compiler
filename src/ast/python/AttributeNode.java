@@ -27,4 +27,7 @@ public class AttributeNode extends ASTNode {
     public String getAttribute() {
         return attribute;
     }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

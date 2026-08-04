@@ -26,4 +26,7 @@ public class AssignmentNode extends ASTNode {
     public ASTNode getValue() {
         return value;
     }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

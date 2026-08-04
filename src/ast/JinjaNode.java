@@ -28,6 +28,9 @@ public class JinjaNode extends ASTNode {
     }
 
     @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
+
+    @Override
     public void print(String indent) {
         System.out.println(indent + "JINJA " + type + ": " + content);
     }
