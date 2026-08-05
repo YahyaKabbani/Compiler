@@ -18,8 +18,10 @@ import visitor.HTMLASTBuilder;
 import visitor.HtmlGenerator;
 import visitor.JinjaBlockBuilder;
 import visitor.JinjaContextLinker;
+import visitor.RouteExtractor;
 import visitor.SemanticAnalyzer;
 import visitor.SymbolTableBuilder;
+import visitor.TemplateInheritanceResolver;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +46,7 @@ public class Main {
 
         ContextExtractor extractor = new ContextExtractor();
         Map<String, Map<String, ASTNode>> contexts = extractor.extract(pythonAst);
+        Map<String, Map<String, ASTNode>> collections = extractor.getCollections();
 
         banner("GENERATOR — DATA EXTRACTED FROM " + PYTHON_FILE);
         extractor.dump();
@@ -85,29 +88,41 @@ public class Main {
         analyzer.writeReport(Path.of("compiler_output", "semantic_report.txt"));
 
         banner("CODE GENERATION");
-        generate(pythonAst, contexts);
+        generate(pythonAst, contexts, collections);
     }
 
-    private static void generate(ASTNode pythonAst, Map<String, Map<String, ASTNode>> contexts) throws Exception {
+    private static void generate(ASTNode pythonAst,
+                                 Map<String, Map<String, ASTNode>> contexts,
+                                 Map<String, Map<String, ASTNode>> collections) throws Exception {
         OutputWriter.clean();
 
-        Map<String, ASTNode> generationTrees = new LinkedHashMap<>();
-        for (Path template : findTemplates()) {
-            String name = template.getFileName().toString();
-            generationTrees.put(name, buildTemplateAst(template, new ArrayList<>()));
+        Map<String, String> routes = RouteExtractor.extract(pythonAst);
+        Map<String, String> templateRoutes = new LinkedHashMap<>();
+        for (Map.Entry<String, String> route : routes.entrySet()) {
+            templateRoutes.putIfAbsent(route.getValue(), route.getKey());
         }
 
+        List<Page> pages = planPages(contexts, collections, templateRoutes);
+
+        Map<String, String> links = new LinkedHashMap<>();
+        for (Page page : pages) {
+            if (page.url != null && !page.url.contains("<")) links.put(page.url, page.file);
+        }
+
+        Map<String, ASTNode> mergedTrees = new LinkedHashMap<>();
         List<String> log = new ArrayList<>();
-        for (Map.Entry<String, ASTNode> entry : generationTrees.entrySet()) {
-            String name = entry.getKey();
 
-            HtmlGenerator generator = new HtmlGenerator(name, contexts.get(name));
-            String html = generator.generate(entry.getValue());
-            OutputWriter.writePage(name, html);
+        for (Page page : pages) {
+            Map<String, ASTNode> pageTrees = parseTemplates();
+            ASTNode merged = TemplateInheritanceResolver.resolve(page.template, pageTrees);
+            mergedTrees.putIfAbsent(page.template, merged);
 
-            String pageName = name.replace(".jinja", ".html");
+            HtmlGenerator generator = new HtmlGenerator(page.file, page.context, links);
+            String html = generator.generate(merged);
+            OutputWriter.writeFile(page.file, html);
+
             String pageLine = String.format("[page]  %s -> output/%s (%d bytes)",
-                    name, pageName, html.getBytes().length);
+                    page.template, page.file, html.getBytes().length);
             log.add(pageLine);
             log.addAll(generator.getLog());
             System.out.println(pageLine);
@@ -115,10 +130,78 @@ public class Main {
 
         OutputWriter.copySupportFiles();
         CompilerOutputWriter.writeAstJson("ast_python.json", pythonAst);
-        CompilerOutputWriter.writeAstJson("ast_jinja.json", generationTrees);
+        CompilerOutputWriter.writeAstJson("ast_jinja.json", mergedTrees);
         CompilerOutputWriter.writeGenerationLog(log);
         System.out.println("[copy]  app.py, style.css -> output/");
         System.out.println("[json]  ast_python.json, ast_jinja.json, generation_log.txt -> compiler_output/");
+    }
+
+    private static final class Page {
+        final String template;
+        final String file;
+        final String url;
+        final Map<String, ASTNode> context;
+
+        Page(String template, String file, String url, Map<String, ASTNode> context) {
+            this.template = template;
+            this.file = file;
+            this.url = url;
+            this.context = context;
+        }
+    }
+
+    private static List<Page> planPages(Map<String, Map<String, ASTNode>> contexts,
+                                        Map<String, Map<String, ASTNode>> collections,
+                                        Map<String, String> templateRoutes) throws Exception {
+        List<Page> pages = new ArrayList<>();
+        Map<String, ASTNode> templates = parseTemplates();
+
+        for (String name : templates.keySet()) {
+            if (TemplateInheritanceResolver.isParentTemplate(name, templates)) {
+                System.out.println("[skip]  " + name + " is a parent template, not a page");
+                continue;
+            }
+
+            String base = name.replace(".jinja", "");
+            Map<String, ASTNode> context = contexts.get(name);
+            String route = templateRoutes.get(name);
+
+            pages.add(new Page(name, base + ".html", route, context));
+
+            Map<String, ASTNode> collection = collections.get(name);
+            if (route == null || !route.contains("<") || collection == null || collection.isEmpty()) continue;
+
+            Map.Entry<String, ASTNode> entry = collection.entrySet().iterator().next();
+            String variable = entry.getKey();
+
+            int position = 1;
+            for (ASTNode element : entry.getValue().children()) {
+                String id = identifierOf(element, position++);
+
+                Map<String, ASTNode> itemContext = new LinkedHashMap<>();
+                if (context != null) itemContext.putAll(context);
+                itemContext.put(variable, element);
+
+                pages.add(new Page(name, base + "_" + id + ".html",
+                        route.replaceAll("<[^>]*>", id), itemContext));
+            }
+        }
+
+        return pages;
+    }
+
+    private static String identifierOf(ASTNode element, int position) {
+        ASTNode id = element.lookup("id");
+        if (id == null) return String.valueOf(position);
+        return id.describe().replaceAll("^\"|\"$|^'|'$", "");
+    }
+
+    private static Map<String, ASTNode> parseTemplates() throws Exception {
+        Map<String, ASTNode> trees = new LinkedHashMap<>();
+        for (Path template : findTemplates()) {
+            trees.put(template.getFileName().toString(), buildTemplateAst(template, new ArrayList<>()));
+        }
+        return trees;
     }
 
     private static List<Path> findTemplates() throws Exception {

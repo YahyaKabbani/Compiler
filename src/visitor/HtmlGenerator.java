@@ -1,6 +1,7 @@
 package visitor;
 
 import ast.ASTNode;
+import ast.HtmlAttributeNode;
 import ast.HtmlTagNode;
 import ast.JinjaExprNode;
 import ast.JinjaForNode;
@@ -14,22 +15,27 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class HtmlGenerator extends AbstractASTVisitor {
     private static final Set<String> VOID_ELEMENTS =
             Set.of("br", "hr", "img", "input", "link", "meta");
 
-    private static final Pattern ATTRIBUTE_EXPR = Pattern.compile("\\{\\{[^}]*\\}\\}");
+    private static final Set<String> LINK_ATTRIBUTES = Set.of("href", "action");
 
     private final String templateName;
+    private final Map<String, String> links;
     private final Deque<Map<String, ASTNode>> scopes = new ArrayDeque<>();
     private final StringBuilder out = new StringBuilder();
     private final List<String> log = new ArrayList<>();
+    private StringBuilder attributeValue;
 
     public HtmlGenerator(String templateName, Map<String, ASTNode> context) {
+        this(templateName, context, Map.of());
+    }
+
+    public HtmlGenerator(String templateName, Map<String, ASTNode> context, Map<String, String> links) {
         this.templateName = templateName;
+        this.links = links == null ? Map.of() : links;
         Map<String, ASTNode> global = new LinkedHashMap<>();
         if (context != null) global.putAll(context);
         scopes.push(global);
@@ -50,17 +56,12 @@ public class HtmlGenerator extends AbstractASTVisitor {
     public void visit(HtmlTagNode node) {
         String tag = node.getTagName();
         if ("__group__".equals(tag)) {
-            visitChildren(node);
+            emitBody(node);
             return;
         }
 
         out.append('<').append(tag);
-        for (Map.Entry<String, String> attribute : node.getAttributes().entrySet()) {
-            out.append(' ').append(attribute.getKey());
-            if (!attribute.getValue().isEmpty()) {
-                out.append('=').append(substituteAttribute(attribute.getValue(), node.getLine()));
-            }
-        }
+        emitAttributes(node);
         out.append('>');
 
         if (VOID_ELEMENTS.contains(tag.toLowerCase())) {
@@ -68,12 +69,16 @@ public class HtmlGenerator extends AbstractASTVisitor {
             return;
         }
 
-        visitChildren(node);
+        emitBody(node);
         out.append("</").append(tag).append(">\n");
     }
 
     @Override
     public void visit(TextNode node) {
+        if (attributeValue != null) {
+            attributeValue.append(node.getText());
+            return;
+        }
         emitInline(node.getText());
     }
 
@@ -81,12 +86,62 @@ public class HtmlGenerator extends AbstractASTVisitor {
     public void visit(JinjaExprNode node) {
         ASTNode value = resolveExpr(node.getBase(), node.getPath());
         if (value == null) {
-            warn(node.getLine(), "{{ " + node.getExpression() + " }} unresolved");
+            warn(node.getLine(), "{{ " + node.getExpression() + " }} unresolved"
+                    + (attributeValue != null ? " in attribute" : ""));
             return;
         }
         String text = unquote(value.describe());
+        if (attributeValue != null) {
+            attributeValue.append(text);
+            info("attr", node.getLine(), "{{ " + node.getExpression() + " }} -> " + text);
+            return;
+        }
         emitInline(text);
         info("expr", node.getLine(), "{{ " + node.getExpression() + " }} -> " + text);
+    }
+
+    private void emitBody(HtmlTagNode node) {
+        for (ASTNode child : node.getChildren()) child.accept(this);
+    }
+
+    private void emitAttributes(HtmlTagNode node) {
+        List<HtmlAttributeNode> nodes = node.getAttributeNodes();
+        if (nodes.isEmpty()) {
+            for (Map.Entry<String, String> attribute : node.getAttributes().entrySet()) {
+                out.append(' ').append(attribute.getKey());
+                if (!attribute.getValue().isEmpty()) out.append('=').append(attribute.getValue());
+            }
+            return;
+        }
+
+        for (HtmlAttributeNode attribute : nodes) {
+            out.append(' ').append(attribute.getName());
+            if (attribute.getRawValue().isEmpty()) continue;
+
+            attributeValue = new StringBuilder();
+            for (ASTNode part : attribute.getValueParts()) part.accept(this);
+            String value = attributeValue.toString();
+            attributeValue = null;
+
+            out.append('=').append(mapLink(attribute.getName(), value, attribute.getLine()));
+        }
+    }
+
+    private String mapLink(String name, String value, int line) {
+        if (links.isEmpty() || !LINK_ATTRIBUTES.contains(name.toLowerCase())) return value;
+
+        String quote = "";
+        String url = value;
+        if (url.length() >= 2 && (url.startsWith("\"") || url.startsWith("'"))) {
+            quote = url.substring(0, 1);
+            url = url.substring(1, url.length() - 1);
+        }
+
+        String mapped = links.get(url);
+        if (mapped == null) return value;
+
+        info("link", line, url + " -> " + mapped);
+        return quote + mapped + quote;
     }
 
     @Override
@@ -133,28 +188,6 @@ public class HtmlGenerator extends AbstractASTVisitor {
         } else {
             info("if", node.getLine(), "{% if " + node.getCondition() + " %} -> false, skipped");
         }
-    }
-
-    private String substituteAttribute(String value, int line) {
-        if (!value.contains("{{")) return value;
-
-        StringBuilder sb = new StringBuilder();
-        Matcher matcher = ATTRIBUTE_EXPR.matcher(value);
-        while (matcher.find()) {
-            JinjaExprNode expr = new JinjaExprNode(matcher.group(), line);
-            ASTNode resolved = resolveExpr(expr.getBase(), expr.getPath());
-            String replacement;
-            if (resolved == null) {
-                warn(line, "{{ " + expr.getExpression() + " }} unresolved in attribute");
-                replacement = "";
-            } else {
-                replacement = unquote(resolved.describe());
-                info("attr", line, "{{ " + expr.getExpression() + " }} -> " + replacement);
-            }
-            matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
     }
 
     private void emitInline(String text) {

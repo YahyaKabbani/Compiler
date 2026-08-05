@@ -4,9 +4,6 @@ import ast.*;
 import ast.python.*;
 import symbol.*;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class SymbolTableBuilder extends AbstractASTVisitor {
     private final SymbolTable table = new SymbolTable();
 
@@ -58,13 +55,6 @@ public class SymbolTableBuilder extends AbstractASTVisitor {
     public void visit(HtmlTagNode node) {
         table.define(new Symbol(node.getTagName(), SymbolKind.HTML_TAG, node.getLine(), table.currentScope()));
         table.enterScope("html:" + node.getTagName());
-
-        for (String attrValue : node.getAttributes().values()) {
-            Matcher m = JINJA_EXPR_VAR.matcher(attrValue);
-            while (m.find())
-                table.define(new Symbol(m.group(1), SymbolKind.JINJA_VARIABLE, node.getLine(), table.currentScope()));
-        }
-
         visitChildren(node);
         table.exitScope();
     }
@@ -121,6 +111,4 @@ public class SymbolTableBuilder extends AbstractASTVisitor {
             }
         }
     }
-
-    private static final Pattern JINJA_EXPR_VAR = Pattern.compile("\\{\\{\\s*([A-Za-z_]\\w*)");
 }

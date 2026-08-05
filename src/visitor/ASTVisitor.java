@@ -24,6 +24,7 @@ public interface ASTVisitor {
 
     void visit(HtmlDocumentNode node);
     void visit(HtmlTagNode node);
+    void visit(HtmlAttributeNode node);
     void visit(TextNode node);
 
     void visit(JinjaExprNode node);
