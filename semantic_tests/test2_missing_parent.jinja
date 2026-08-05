@@ -1,0 +1,6 @@
+{# TEST 2 — MISSING_PARENT: extends a parent template that does not exist #}
+{# Expected: [MISSING_PARENT] test2_missing_parent.jinja — {% extends "base_layout.jinja" %} but the parent template does not exist #}
+{% extends "base_layout.jinja" %}
+{% block content %}
+<h1>Test</h1>
+{% endblock %}

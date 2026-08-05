@@ -8,11 +8,14 @@ import gen.HTMLJinja2Lexer;
 import gen.HTMLJinja2Parser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import output.CompilerOutputWriter;
+import output.OutputWriter;
 import symbol.SymbolTable;
 import visitor.CSSASTBuilder;
 import visitor.ContextExtractor;
 import visitor.FlaskPythonASTBuilder;
 import visitor.HTMLASTBuilder;
+import visitor.HtmlGenerator;
 import visitor.JinjaBlockBuilder;
 import visitor.JinjaContextLinker;
 import visitor.SemanticAnalyzer;
@@ -21,6 +24,7 @@ import visitor.SymbolTableBuilder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +83,42 @@ public class Main {
 
         banner("SEMANTIC ANALYSIS");
         analyzer.writeReport(Path.of("compiler_output", "semantic_report.txt"));
+
+        banner("CODE GENERATION");
+        generate(pythonAst, contexts);
+    }
+
+    private static void generate(ASTNode pythonAst, Map<String, Map<String, ASTNode>> contexts) throws Exception {
+        OutputWriter.clean();
+
+        Map<String, ASTNode> generationTrees = new LinkedHashMap<>();
+        for (Path template : findTemplates()) {
+            String name = template.getFileName().toString();
+            generationTrees.put(name, buildTemplateAst(template, new ArrayList<>()));
+        }
+
+        List<String> log = new ArrayList<>();
+        for (Map.Entry<String, ASTNode> entry : generationTrees.entrySet()) {
+            String name = entry.getKey();
+
+            HtmlGenerator generator = new HtmlGenerator(name, contexts.get(name));
+            String html = generator.generate(entry.getValue());
+            OutputWriter.writePage(name, html);
+
+            String pageName = name.replace(".jinja", ".html");
+            String pageLine = String.format("[page]  %s -> output/%s (%d bytes)",
+                    name, pageName, html.getBytes().length);
+            log.add(pageLine);
+            log.addAll(generator.getLog());
+            System.out.println(pageLine);
+        }
+
+        OutputWriter.copySupportFiles();
+        CompilerOutputWriter.writeAstJson("ast_python.json", pythonAst);
+        CompilerOutputWriter.writeAstJson("ast_jinja.json", generationTrees);
+        CompilerOutputWriter.writeGenerationLog(log);
+        System.out.println("[copy]  app.py, style.css -> output/");
+        System.out.println("[json]  ast_python.json, ast_jinja.json, generation_log.txt -> compiler_output/");
     }
 
     private static List<Path> findTemplates() throws Exception {

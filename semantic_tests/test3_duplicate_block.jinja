@@ -1,0 +1,9 @@
+{# TEST 3 — DUPLICATE_BLOCK: the block name 'content' is defined twice in the same template #}
+{# Expected: [DUPLICATE_BLOCK] test3_duplicate_block.jinja — {% block content %} is defined more than once in this template #}
+{% extends "base.jinja" %}
+{% block content %}
+<h1>First</h1>
+{% endblock %}
+{% block content %}
+<h1>Second</h1>
+{% endblock %}

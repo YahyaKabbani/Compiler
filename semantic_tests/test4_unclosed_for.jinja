@@ -1,0 +1,8 @@
+{# TEST 4 — UNCLOSED_BLOCK: the for loop has no endfor #}
+{# Expected: [UNCLOSED_BLOCK] test4_unclosed_for.jinja — {% for %} is opened but never closed #}
+{% extends "base.jinja" %}
+{% block content %}
+<h1>Products</h1>
+{% for p in products %}
+<div class="product">item</div>
+{% endblock %}

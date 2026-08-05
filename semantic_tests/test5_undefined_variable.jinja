@@ -1,0 +1,6 @@
+{# TEST 5 — UNDEFINED_VARIABLE: shop_name is never passed by render_template #}
+{# Expected: [UNDEFINED_VARIABLE] test5_undefined_variable.jinja — {{ shop_name }} cannot be resolved from the data passed by render_template #}
+{% extends "base.jinja" %}
+{% block content %}
+<h1>Welcome to {{ shop_name }}</h1>
+{% endblock %}

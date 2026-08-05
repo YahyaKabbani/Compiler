@@ -53,6 +53,47 @@ public abstract class ASTNode {
 
     public abstract void accept(ASTVisitor visitor);
 
+    public String toJson() {
+        StringBuilder sb = new StringBuilder();
+        json(sb);
+        return sb.toString();
+    }
+
+    private void json(StringBuilder sb) {
+        sb.append("{\"node\":").append(jsonString(nodeName))
+          .append(",\"line\":").append(line)
+          .append(",\"label\":").append(jsonString(label()));
+        jsonFields(sb);
+        sb.append(",\"children\":[");
+        boolean first = true;
+        for (ASTNode child : children()) {
+            if (!first) sb.append(',');
+            first = false;
+            child.json(sb);
+        }
+        sb.append("]}");
+    }
+
+    protected void jsonFields(StringBuilder sb) { }
+
+    protected static String jsonString(String value) {
+        StringBuilder sb = new StringBuilder("\"");
+        for (char c : value.toCharArray()) {
+            switch (c) {
+                case '"'  -> sb.append("\\\"");
+                case '\\' -> sb.append("\\\\");
+                case '\n' -> sb.append("\\n");
+                case '\r' -> sb.append("\\r");
+                case '\t' -> sb.append("\\t");
+                default   -> {
+                    if (c < 0x20) sb.append(String.format("\\u%04x", (int) c));
+                    else sb.append(c);
+                }
+            }
+        }
+        return sb.append('"').toString();
+    }
+
     protected String at(String text) {
         return text + " @line " + line;
     }

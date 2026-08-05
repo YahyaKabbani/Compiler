@@ -1,0 +1,17 @@
+[page]  add_product.jinja -> output/add_product.html (296 bytes)
+[page]  base.jinja -> output/base.html (207 bytes)
+[page]  index.jinja -> output/index.html (289 bytes)
+[loop]  index.jinja:4  {% for p in products %} -> 2 iterations
+[attr]  index.jinja:6  {{ p.photo }} -> kb.png
+[expr]  index.jinja:7  {{ p.name }} -> Keyboard
+[expr]  index.jinja:7  {{ p.price }} -> 25
+[attr]  index.jinja:8  {{ p.id }} -> 1
+[attr]  index.jinja:6  {{ p.photo }} -> ms.png
+[expr]  index.jinja:7  {{ p.name }} -> Mouse
+[expr]  index.jinja:7  {{ p.price }} -> 15
+[attr]  index.jinja:8  {{ p.id }} -> 2
+[page]  product_details.jinja -> output/product_details.html (154 bytes)
+[expr]  product_details.jinja:2  {{ product.name }} -> Keyboard
+[attr]  product_details.jinja:4  {{ product.photo }} -> kb.png
+[expr]  product_details.jinja:6  {{ product.price }} -> 25
+[expr]  product_details.jinja:7  {{ product.details }} -> Mechanical keyboard
