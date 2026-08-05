@@ -1,4 +1,5 @@
-package gen;// Generated from D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/projects/Antlr - Copy/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
+// Generated from FlaskPythonParser.g4 by ANTLR 4.13.2
+package gen;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -226,4 +227,14 @@ public interface FlaskPythonParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitListLiteral(FlaskPythonParser.ListLiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FlaskPythonParser#layout}.
+	 * @param ctx the parse tree
+	 */
+	void enterLayout(FlaskPythonParser.LayoutContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FlaskPythonParser#layout}.
+	 * @param ctx the parse tree
+	 */
+	void exitLayout(FlaskPythonParser.LayoutContext ctx);
 }

@@ -1,47 +1,62 @@
 package visitor;
 
-import ast.*;
+import ast.ASTNode;
+import ast.JinjaExprNode;
+import ast.JinjaForNode;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * يربط بيانات Python AST بشجرة HTML/Jinja2.
- *
- * مثال:
- *   Python:  render_template("index.html", products=read())
- *   Context: { "index.html": { "products": "read(...)" } }
- *
- *   HTML ForNode: FOR p IN products  [source: unresolved]
- *   بعد الربط:   FOR p IN products  [source: read(...)]
- */
-public class JinjaContextLinker {
+public class JinjaContextLinker extends AbstractASTVisitor {
+    private final Deque<Map<String, ASTNode>> scopes = new ArrayDeque<>();
 
-    /**
-     * يمشي على HTML AST ويربط كل ForNode بمصدر بياناته من Python context.
-     *
-     * @param htmlRoot   جذر شجرة HTML
-     * @param context    Map من ContextExtractor: { varName -> source }
-     */
-    public static void link(ASTNode htmlRoot, Map<String, String> context) {
-        if (htmlRoot == null || context == null || context.isEmpty()) return;
-        walk(htmlRoot, context);
+    private JinjaContextLinker(Map<String, ASTNode> context) {
+        Map<String, ASTNode> global = new LinkedHashMap<>();
+        if (context != null) global.putAll(context);
+        scopes.push(global);
     }
 
-    private static void walk(ASTNode node, Map<String, String> context) {
-        if (node == null) return;
+    public static void link(ASTNode templateRoot, Map<String, ASTNode> context) {
+        if (templateRoot == null) return;
+        templateRoot.accept(new JinjaContextLinker(context));
+    }
 
-        if (node instanceof HtmlDocumentNode doc) {
-            for (ASTNode child : doc.getChildren()) walk(child, context);
+    @Override
+    public void visit(JinjaForNode node) {
+        ASTNode source = resolve(node.getIterable());
+
+        node.setResolvedData(source);
+        node.setResolvedSource(source != null ? source.describe() : "unresolved");
+
+        Map<String, ASTNode> scope = new LinkedHashMap<>();
+        ASTNode element = source != null ? source.elementType() : null;
+        if (element != null) scope.put(node.getVariable(), element);
+
+        scopes.push(scope);
+        visitChildren(node);
+        scopes.pop();
+    }
+
+    @Override
+    public void visit(JinjaExprNode node) {
+        ASTNode value = resolve(node.getBase());
+
+        for (String key : node.getPath()) {
+            if (value == null) break;
+            value = value.lookup(key);
         }
 
-        else if (node instanceof ForNode forNode) {
-            // iterable = "products" → ابحث عنها في context
-            String source = context.get(forNode.getIterable());
-            forNode.setResolvedSource(source != null ? source : "unresolved");
-            for (ASTNode child : forNode.getBody()) walk(child, context);
-        }
+        node.setResolvedValue(value);
+    }
 
-        else if (node instanceof HtmlTagNode tag) {
-            for (ASTNode child : tag.getChildren()) walk(child, context);
+    private ASTNode resolve(String name) {
+        if (name == null) return null;
+        for (Map<String, ASTNode> scope : scopes) {
+            ASTNode value = scope.get(name);
+            if (value != null) return value;
         }
+        return null;
     }
 }

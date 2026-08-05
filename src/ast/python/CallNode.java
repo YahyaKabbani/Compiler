@@ -1,10 +1,10 @@
 package ast.python;
 
 import ast.ASTNode;
+
 import java.util.List;
 
-public class CallNode extends ASTNode {
-
+public class CallNode extends PythonNode {
     private final ASTNode target;
     private final List<ASTNode> args;
 
@@ -14,21 +14,23 @@ public class CallNode extends ASTNode {
         this.args = args;
     }
 
+    public ASTNode getTarget() { return target; }
+    public List<ASTNode> getArgs() { return args; }
+
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "Call");
-        target.print(indent + "  ");
-        for (ASTNode arg : args) {
-            arg.print(indent + "    ");
-        }
+    public String label() { return at("Call " + describe()); }
+
+    @Override
+    public List<ASTNode> children() { return kids().add(target).addAll(args).build(); }
+
+    @Override
+    public String describe() {
+        return (target != null ? target.describe() : "?") + "(...)";
     }
 
-    public ASTNode getTarget() {
-        return target;
-    }
-
-    public List<ASTNode> getArgs() {
-        return args;
+    @Override
+    public String calledFunctionName() {
+        return target != null ? target.asCallableName() : null;
     }
 
     @Override

@@ -1,14 +1,14 @@
 package ast;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HtmlTagNode extends ASTNode {
-
+public class HtmlTagNode extends TemplateNode {
     private final String tagName;
-    private final List<ASTNode> children;
     private final Map<String, String> attributes;
+    private List<ASTNode> children;
 
     public HtmlTagNode(String tagName, List<ASTNode> children, int line) {
         this(tagName, new LinkedHashMap<>(), children, line);
@@ -18,28 +18,31 @@ public class HtmlTagNode extends ASTNode {
         super("HtmlTag", line);
         this.tagName = tagName;
         this.attributes = attributes;
-        this.children = children;
+        this.children = new ArrayList<>(children);
+    }
+
+    public String getTagName() { return tagName; }
+
+    public Map<String, String> getAttributes() { return attributes; }
+
+    public List<ASTNode> getChildren() { return children; }
+
+    public void setChildren(List<ASTNode> children) {
+        this.children = new ArrayList<>(children);
     }
 
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "<" + tagName + "> (line " + getLine() + ")");
-        for (ASTNode child : children) {
-            child.print(indent + "  ");
+    public String label() {
+        StringBuilder sb = new StringBuilder("<").append(tagName);
+        for (Map.Entry<String, String> a : attributes.entrySet()) {
+            sb.append(' ').append(a.getKey()).append("=").append(a.getValue());
         }
+        sb.append('>');
+        return at(sb.toString());
     }
 
-    public String getTagName() {
-        return tagName;
-    }
-
-    public List<ASTNode> getChildren() {
-        return children;
-    }
-
-    public Map<String, String> getAttributes() {
-        return attributes;
-    }
+    @Override
+    public List<ASTNode> children() { return kids().addAll(children).build(); }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }

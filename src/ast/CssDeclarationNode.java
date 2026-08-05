@@ -1,6 +1,6 @@
 package ast;
 
-public class CssDeclarationNode extends ASTNode {
+public class CssDeclarationNode extends CssNode {
     private final String property;
     private final String value;
 
@@ -14,10 +14,8 @@ public class CssDeclarationNode extends ASTNode {
     public String getValue() { return value; }
 
     @Override
-    public void accept(visitor.ASTVisitor v) { v.visit(this); }
+    public String label() { return at("CssDeclaration " + property + ": " + value); }
 
     @Override
-    public void print(String indent) {
-        System.out.println(indent + property + ": " + value + " (line " + getLine() + ")");
-    }
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

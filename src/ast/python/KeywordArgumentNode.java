@@ -2,8 +2,9 @@ package ast.python;
 
 import ast.ASTNode;
 
-public class KeywordArgumentNode extends ASTNode {
+import java.util.List;
 
+public class KeywordArgumentNode extends PythonNode {
     private final String name;
     private final ASTNode value;
 
@@ -13,15 +14,26 @@ public class KeywordArgumentNode extends ASTNode {
         this.value = value;
     }
 
-    public String getName()  { return name; }
+    public String getName() { return name; }
     public ASTNode getValue() { return value; }
 
     @Override
-    public void accept(visitor.ASTVisitor v) { v.visit(this); }
+    public String label() { return at("KeywordArg '" + name + "'"); }
 
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "KeywordArg " + name + " @line " + getLine());
-        if (value != null) value.print(indent + "  ");
+    public List<ASTNode> children() { return kids().add(value).build(); }
+
+    @Override
+    public String describe() {
+        return value != null ? value.describe() : "None";
     }
+
+    @Override
+    public String keywordName() { return name; }
+
+    @Override
+    public ASTNode keywordValue() { return value; }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

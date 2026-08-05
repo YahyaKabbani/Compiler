@@ -1,10 +1,10 @@
 package ast.python;
 
 import ast.ASTNode;
+
 import java.util.List;
 
-public class PythonProgramNode extends ASTNode {
-
+public class PythonProgramNode extends PythonNode {
     private final List<ASTNode> statements;
 
     public PythonProgramNode(List<ASTNode> statements, int line) {
@@ -12,17 +12,13 @@ public class PythonProgramNode extends ASTNode {
         this.statements = statements;
     }
 
-    @Override
-    public void print(String indent) {
-        System.out.println(indent + "PythonProgram");
-        for (ASTNode stmt : statements) {
-            stmt.print(indent + "  ");
-        }
-    }
+    public List<ASTNode> getStatements() { return statements; }
 
-    public List<ASTNode> getStatements() {
-        return statements;
-    }
+    @Override
+    public String label() { return at("PythonProgram"); }
+
+    @Override
+    public List<ASTNode> children() { return kids().addAll(statements).build(); }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }

@@ -2,8 +2,9 @@ package ast.python;
 
 import ast.ASTNode;
 
-public class BinaryOpNode extends ASTNode {
+import java.util.List;
 
+public class BinaryOpNode extends PythonNode {
     private final ASTNode left;
     private final String operator;
     private final ASTNode right;
@@ -15,20 +16,15 @@ public class BinaryOpNode extends ASTNode {
         this.right = right;
     }
 
+    public ASTNode getLeft() { return left; }
+    public String getOperator() { return operator; }
+    public ASTNode getRight() { return right; }
+
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "BinaryOp " + operator);
-        left.print(indent + "  ");
-        right.print(indent + "  ");
-    }
+    public String label() { return at("BinaryOp '" + operator + "'"); }
 
-    public ASTNode getLeft() {
-        return left;
-    }
-
-    public ASTNode getRight() {
-        return right;
-    }
+    @Override
+    public List<ASTNode> children() { return kids().add(left).add(right).build(); }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }

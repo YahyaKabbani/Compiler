@@ -1,8 +1,10 @@
 package ast.python;
+
 import ast.ASTNode;
+
 import java.util.List;
-// ast/python/ForNode.java
-public class ForNode extends ASTNode {
+
+public class ForNode extends PythonNode {
     private final String var;
     private final ASTNode iterable;
     private final List<ASTNode> body;
@@ -19,12 +21,11 @@ public class ForNode extends ASTNode {
     public List<ASTNode> getBody() { return body; }
 
     @Override
-    public void accept(visitor.ASTVisitor v) { v.visit(this); }
+    public String label() { return at("For '" + var + "'"); }
 
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "For " + var + " @line " + getLine());
-        iterable.print(indent + "  ");
-        for (ASTNode n : body) n.print(indent + "  ");
-    }
+    public List<ASTNode> children() { return kids().add(iterable).addAll(body).build(); }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

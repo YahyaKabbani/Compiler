@@ -1,37 +1,15 @@
 package ast;
 
-public class JinjaNode extends ASTNode {
+public abstract class JinjaNode extends TemplateNode {
+    private final String raw;
 
-    private final String type;     // EXPR, STMT, COMMENT
-    private final String content;  // raw text
-
-    public JinjaNode(String type, String content, int line) {
-        super("Jinja" + type, line);
-        this.type = type;
-        this.content = content.trim();
+    protected JinjaNode(String nodeName, String raw, int line) {
+        super(nodeName, line);
+        this.raw = raw == null ? "" : raw.trim();
     }
 
-    public boolean isForStart() {
-        return type.equals("STMT") && content.startsWith("{% for");
-    }
-
-    public boolean isForEnd() {
-        return type.equals("STMT") && content.startsWith("{% endfor");
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getType() {
-        return type;
-    }
+    public String getRaw() { return raw; }
 
     @Override
-    public void accept(visitor.ASTVisitor v) { v.visit(this); }
-
-    @Override
-    public void print(String indent) {
-        System.out.println(indent + "JINJA " + type + ": " + content);
-    }
+    public String describe() { return raw; }
 }
