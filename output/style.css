@@ -115,3 +115,8 @@ hr {
   object-fit: cover;
   border-radius: 8px;
 }
+
+a.delete {
+  color: #c0392b;
+  margin-left: 10px;
+}

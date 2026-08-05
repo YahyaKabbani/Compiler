@@ -6,6 +6,7 @@
     <img src="/static/uploads/{{ p.photo }}" width="150" />
     <h3>{{ p.name }} - ${{ p.price }}</h3>
     <a href="/product/{{ p.id }}">Details</a>
+    <a class="delete" href="/delete/{{ p.id }}">Delete</a>
 </div>
 <hr />
 {% endfor %} {% endblock %}

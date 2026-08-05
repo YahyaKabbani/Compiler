@@ -1,7 +1,7 @@
 [page]  add_product.jinja -> output/add_product.html (524 bytes)
 [link]  add_product.html:9  / -> index.html
 [link]  add_product.html:10  /add -> add_product.html
-[page]  index.jinja -> output/index.html (543 bytes)
+[page]  index.jinja -> output/index.html (635 bytes)
 [link]  index.html:9  / -> index.html
 [link]  index.html:10  /add -> add_product.html
 [loop]  index.html:4  {% for p in products %} -> 2 iterations
@@ -10,12 +10,14 @@
 [expr]  index.html:7  {{ p.price }} -> 2502
 [attr]  index.html:8  {{ p.id }} -> 1
 [link]  index.html:8  /product/1 -> product_details_1.html
+[attr]  index.html:9  {{ p.id }} -> 1
 [attr]  index.html:6  {{ p.photo }} -> ms.png
 [expr]  index.html:7  {{ p.name }} -> Mouse
 [expr]  index.html:7  {{ p.price }} -> 15
 [attr]  index.html:8  {{ p.id }} -> 2
 [link]  index.html:8  /product/2 -> product_details_2.html
-[page]  product_details.jinja -> output/product_details.html (393 bytes)
+[attr]  index.html:9  {{ p.id }} -> 2
+[page]  product_details.jinja -> output/product_details.html (439 bytes)
 [link]  product_details.html:9  / -> index.html
 [link]  product_details.html:10  /add -> add_product.html
 [expr]  product_details.html:2  {{ product.name }} -> Keyboard
@@ -23,7 +25,8 @@
 [expr]  product_details.html:6  {{ product.price }} -> 2502
 [expr]  product_details.html:7  {{ product.details }} -> Mechanical keyboard
 [link]  product_details.html:9  / -> index.html
-[page]  product_details.jinja -> output/product_details_1.html (393 bytes)
+[attr]  product_details.html:10  {{ product.id }} -> 1
+[page]  product_details.jinja -> output/product_details_1.html (439 bytes)
 [link]  product_details_1.html:9  / -> index.html
 [link]  product_details_1.html:10  /add -> add_product.html
 [expr]  product_details_1.html:2  {{ product.name }} -> Keyboard
@@ -31,7 +34,8 @@
 [expr]  product_details_1.html:6  {{ product.price }} -> 2502
 [expr]  product_details_1.html:7  {{ product.details }} -> Mechanical keyboard
 [link]  product_details_1.html:9  / -> index.html
-[page]  product_details.jinja -> output/product_details_2.html (391 bytes)
+[attr]  product_details_1.html:10  {{ product.id }} -> 1
+[page]  product_details.jinja -> output/product_details_2.html (437 bytes)
 [link]  product_details_2.html:9  / -> index.html
 [link]  product_details_2.html:10  /add -> add_product.html
 [expr]  product_details_2.html:2  {{ product.name }} -> Mouse
@@ -39,3 +43,4 @@
 [expr]  product_details_2.html:6  {{ product.price }} -> 15
 [expr]  product_details_2.html:7  {{ product.details }} -> Wireless optical mouse
 [link]  product_details_2.html:9  / -> index.html
+[attr]  product_details_2.html:10  {{ product.id }} -> 2
