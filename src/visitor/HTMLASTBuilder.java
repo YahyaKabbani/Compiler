@@ -6,11 +6,13 @@ import gen.HTMLJinja2ParserBaseVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HTMLASTBuilder extends HTMLJinja2ParserBaseVisitor<ASTNode> {
+    private static final Pattern JINJA_EXPR = Pattern.compile("\\{\\{.*?\\}\\}");
+
     @Override
     public ASTNode visitHtmlDocument(HTMLJinja2Parser.HtmlDocumentContext ctx) {
         return new HtmlDocumentNode(visitAll(ctx.children), ctx.start.getLine());
@@ -21,13 +23,15 @@ public class HTMLASTBuilder extends HTMLJinja2ParserBaseVisitor<ASTNode> {
         if (ctx.TAG_OPEN() != null && ctx.TAG_NAME() != null && !ctx.TAG_NAME().isEmpty()) {
             String tag = ctx.TAG_NAME(0).getText();
 
-            Map<String, String> attributes = new LinkedHashMap<>();
+            List<HtmlAttributeNode> attributes = new ArrayList<>();
             for (var attrCtx : ctx.htmlAttribute()) {
+                int attrLine = attrCtx.start.getLine();
                 String attrName = attrCtx.TAG_NAME().getText();
                 String attrValue = attrCtx.ATTVALUE_VALUE() != null
                         ? attrCtx.ATTVALUE_VALUE().getText()
                         : "";
-                attributes.put(attrName, attrValue);
+                attributes.add(new HtmlAttributeNode(
+                        attrName, attrValue, splitAttributeValue(attrValue, attrLine), attrLine));
             }
 
             List<ASTNode> children = new ArrayList<>();
@@ -35,7 +39,7 @@ public class HTMLASTBuilder extends HTMLJinja2ParserBaseVisitor<ASTNode> {
                 children = visitAll(ctx.htmlContent().children);
             }
 
-            return new HtmlTagNode(tag, attributes, children, ctx.start.getLine());
+            return HtmlTagNode.withAttributes(tag, attributes, children, ctx.start.getLine());
         }
 
         if (ctx.jinja() != null) return visit(ctx.jinja());
@@ -108,6 +112,24 @@ public class HTMLASTBuilder extends HTMLJinja2ParserBaseVisitor<ASTNode> {
             default:
                 return new JinjaRawStmtNode(keyword, raw, line);
         }
+    }
+
+    private List<ASTNode> splitAttributeValue(String value, int line) {
+        List<ASTNode> parts = new ArrayList<>();
+        if (value.isEmpty()) return parts;
+
+        Matcher matcher = JINJA_EXPR.matcher(value);
+        int last = 0;
+        while (matcher.find()) {
+            if (matcher.start() > last) {
+                parts.add(TextNode.raw(value.substring(last, matcher.start()), line));
+            }
+            parts.add(new JinjaExprNode(matcher.group(), line));
+            last = matcher.end();
+        }
+        if (last < value.length()) parts.add(TextNode.raw(value.substring(last), line));
+
+        return parts;
     }
 
     private List<ASTNode> visitAll(List<? extends ParseTree> children) {

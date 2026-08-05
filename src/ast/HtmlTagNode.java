@@ -8,6 +8,7 @@ import java.util.Map;
 public class HtmlTagNode extends TemplateNode {
     private final String tagName;
     private final Map<String, String> attributes;
+    private final List<HtmlAttributeNode> attributeNodes;
     private List<ASTNode> children;
 
     public HtmlTagNode(String tagName, List<ASTNode> children, int line) {
@@ -18,12 +19,31 @@ public class HtmlTagNode extends TemplateNode {
         super("HtmlTag", line);
         this.tagName = tagName;
         this.attributes = attributes;
+        this.attributeNodes = new ArrayList<>();
         this.children = new ArrayList<>(children);
+    }
+
+    private HtmlTagNode(String tagName, List<HtmlAttributeNode> attributeNodes, int line, List<ASTNode> children) {
+        super("HtmlTag", line);
+        this.tagName = tagName;
+        this.attributeNodes = new ArrayList<>(attributeNodes);
+        this.attributes = new LinkedHashMap<>();
+        for (HtmlAttributeNode attribute : this.attributeNodes) {
+            this.attributes.put(attribute.getName(), attribute.getRawValue());
+        }
+        this.children = new ArrayList<>(children);
+    }
+
+    public static HtmlTagNode withAttributes(String tagName, List<HtmlAttributeNode> attributeNodes,
+                                             List<ASTNode> children, int line) {
+        return new HtmlTagNode(tagName, attributeNodes, line, children);
     }
 
     public String getTagName() { return tagName; }
 
     public Map<String, String> getAttributes() { return attributes; }
+
+    public List<HtmlAttributeNode> getAttributeNodes() { return attributeNodes; }
 
     public List<ASTNode> getChildren() { return children; }
 
@@ -42,7 +62,13 @@ public class HtmlTagNode extends TemplateNode {
     }
 
     @Override
-    public List<ASTNode> children() { return kids().addAll(children).build(); }
+    public List<ASTNode> children() {
+        Children kids = kids();
+        for (HtmlAttributeNode attribute : attributeNodes) {
+            if (attribute.isDynamic()) kids.add(attribute);
+        }
+        return kids.addAll(children).build();
+    }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }

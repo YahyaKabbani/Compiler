@@ -29,6 +29,7 @@ public abstract class AbstractASTVisitor implements ASTVisitor {
 
     @Override public void visit(HtmlDocumentNode node)     { visitChildren(node); }
     @Override public void visit(HtmlTagNode node)          { visitChildren(node); }
+    @Override public void visit(HtmlAttributeNode node)    { visitChildren(node); }
     @Override public void visit(TextNode node)             { visitChildren(node); }
 
     @Override public void visit(JinjaExprNode node)        { visitChildren(node); }

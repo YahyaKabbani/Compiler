@@ -5,7 +5,16 @@ public class TextNode extends TemplateNode {
 
     public TextNode(String text, int line) {
         super("Text", line);
-        this.text = text.trim();
+        this.text = text == null ? "" : text.trim();
+    }
+
+    private TextNode(int line, String exactText) {
+        super("Text", line);
+        this.text = exactText == null ? "" : exactText;
+    }
+
+    public static TextNode raw(String text, int line) {
+        return new TextNode(line, text);
     }
 
     public String getText() { return text; }
