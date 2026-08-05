@@ -8,8 +8,17 @@ import java.util.Deque;
 import java.util.List;
 
 public class JinjaBlockBuilder extends AbstractASTVisitor {
+    private final List<ASTNode> unclosed = new ArrayList<>();
+
     public static ASTNode build(ASTNode root) {
-        if (root != null) root.accept(new JinjaBlockBuilder());
+        return build(root, new ArrayList<>());
+    }
+
+    public static ASTNode build(ASTNode root, List<ASTNode> unclosedOut) {
+        if (root == null) return root;
+        JinjaBlockBuilder builder = new JinjaBlockBuilder();
+        root.accept(builder);
+        unclosedOut.addAll(builder.unclosed);
         return root;
     }
 
@@ -56,7 +65,10 @@ public class JinjaBlockBuilder extends AbstractASTVisitor {
             stack.peek().items.add(node);
         }
 
-        while (stack.size() > 1) closeTop(stack);
+        while (stack.size() > 1) {
+            unclosed.add(stack.peek().opener);
+            closeTop(stack);
+        }
 
         return stack.peek().items;
     }

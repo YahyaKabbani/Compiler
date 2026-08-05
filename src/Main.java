@@ -15,10 +15,12 @@ import visitor.FlaskPythonASTBuilder;
 import visitor.HTMLASTBuilder;
 import visitor.JinjaBlockBuilder;
 import visitor.JinjaContextLinker;
+import visitor.SemanticAnalyzer;
 import visitor.SymbolTableBuilder;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,13 +44,20 @@ public class Main {
         banner("GENERATOR — DATA EXTRACTED FROM " + PYTHON_FILE);
         extractor.dump();
 
+        SemanticAnalyzer analyzer = new SemanticAnalyzer(TEMPLATE_DIR);
+        analyzer.analyzePython(pythonAst, PYTHON_FILE);
+
         for (Path template : findTemplates()) {
             String name = template.getFileName().toString();
 
-            ASTNode templateAst = buildTemplateAst(template);
+            List<ASTNode> unclosed = new ArrayList<>();
+            ASTNode templateAst = buildTemplateAst(template, unclosed);
 
             Map<String, ASTNode> context = contexts.get(name);
             JinjaContextLinker.link(templateAst, context);
+
+            analyzer.analyzeTemplate(templateAst, name);
+            analyzer.reportUnclosed(name, unclosed);
 
             banner("TEMPLATE AST — " + name
                     + (context == null ? "  (no python context)" : "  (linked)"));
@@ -67,6 +76,9 @@ public class Main {
             banner("SYMBOL TABLE — " + CSS_FILE);
             dumpSymbols(cssAst);
         }
+
+        banner("SEMANTIC ANALYSIS");
+        analyzer.writeReport(Path.of("compiler_output", "semantic_report.txt"));
     }
 
     private static List<Path> findTemplates() throws Exception {
@@ -88,13 +100,13 @@ public class Main {
         return new FlaskPythonASTBuilder().visit(parser.program());
     }
 
-    private static ASTNode buildTemplateAst(Path file) throws Exception {
+    private static ASTNode buildTemplateAst(Path file, List<ASTNode> unclosed) throws Exception {
         String source = Files.readString(file);
         HTMLJinja2Lexer lexer = new HTMLJinja2Lexer(CharStreams.fromString(source));
         HTMLJinja2Parser parser = new HTMLJinja2Parser(new CommonTokenStream(lexer));
         ASTNode ast = new HTMLASTBuilder().visit(parser.htmlDocument());
 
-        return JinjaBlockBuilder.build(ast);
+        return JinjaBlockBuilder.build(ast, unclosed);
     }
 
     private static ASTNode buildCssAst(Path file) throws Exception {
