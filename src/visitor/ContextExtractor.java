@@ -14,6 +14,8 @@ import java.util.Map;
 public class ContextExtractor extends AbstractASTVisitor {
     private final Map<String, Map<String, ASTNode>> contexts = new LinkedHashMap<>();
 
+    private final Map<String, Map<String, ASTNode>> collections = new LinkedHashMap<>();
+
     private final Map<String, ASTNode> variables = new LinkedHashMap<>();
 
     private final Map<String, FunctionDefNode> functions = new LinkedHashMap<>();
@@ -24,6 +26,7 @@ public class ContextExtractor extends AbstractASTVisitor {
 
     public Map<String, Map<String, ASTNode>> extract(ASTNode root) {
         contexts.clear();
+        collections.clear();
         variables.clear();
         functions.clear();
         loopVariables.clear();
@@ -38,6 +41,8 @@ public class ContextExtractor extends AbstractASTVisitor {
     }
 
     public Map<String, Map<String, ASTNode>> getContexts() { return contexts; }
+
+    public Map<String, Map<String, ASTNode>> getCollections() { return collections; }
 
     private class DeclarationCollector extends AbstractASTVisitor {
         @Override
@@ -85,7 +90,25 @@ public class ContextExtractor extends AbstractASTVisitor {
             if (name == null) name = "arg" + positional++;
 
             ctx.put(name, resolveData(arg.keywordValue(), 0));
+
+            ASTNode collection = resolveCollection(arg.keywordValue());
+            if (collection != null) {
+                collections.computeIfAbsent(templateName, k -> new LinkedHashMap<>()).put(name, collection);
+            }
         }
+    }
+
+    private ASTNode resolveCollection(ASTNode value) {
+        if (value == null) return null;
+
+        String variable = value.asVariableName();
+        if (variable == null) return null;
+
+        ASTNode iterable = loopVariables.get(variable);
+        if (iterable == null) return null;
+
+        ASTNode source = resolveData(iterable, 0);
+        return source != null && source.elementType() != null ? source : null;
     }
 
     private ASTNode resolveData(ASTNode value, int depth) {

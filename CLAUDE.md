@@ -41,12 +41,13 @@ Short version: **Python → bytecode → execution**, **Jinja → AST → HTML**
 | 2 | Two ASTs (Python + Jinja2); generator passes the data array into the second tree | **done** |
 | 3 | Nodes apply OOP — Inheritance + Polymorphism; every node stores its name and line | **done** |
 | 4 | Semantic analysis — at least 5 semantic errors handled | **done — 5 checks** (`SemanticAnalyzer` + `JinjaBlockBuilder` unclosed reporting → `compiler_output/semantic_report.txt`) |
-| 5 | Code generation — the generated parts must work together | **not started** |
+| 5 | Code generation — the generated parts must work together | **done** — `output/` pages generated, linked and navigable |
 | 6 | Web interfaces: list products, add product, product details, delete product + smooth navigation | partial — delete missing |
 | 7 | Print each node and its children readably; print the whole tree with the symbol table | done |
 
 Grading note: groups are differentiated by **the quality and number of semantic errors handled**
-(requirement 4). That is the highest-value remaining work.
+(requirement 4). Adding more checks there is still the highest-value work — see the candidate
+list at the bottom of this file.
 
 ---
 
@@ -57,22 +58,37 @@ Grading note: groups are differentiated by **the quality and number of semantic 
 - `templates/*.jinja` — `index.jinja`, `add_product.jinja`, `product_details.jinja`, `base.jinja`
 - `static/style.css`, and optionally `script.js`
 
-### Outputs (not implemented yet)
+### Outputs
 
 ```
 output/
-  index.html            generated
-  add_product.html      generated
-  product_details.html  generated
-  app.py                copied as-is
-  style.css             copied as-is
-  script.js             copied as-is
+  index.html               generated
+  add_product.html         generated
+  product_details.html     generated (first product)
+  product_details_1.html   generated, one page per product
+  product_details_2.html
+  app.py                   copied as-is
+  style.css                copied as-is
+  static/style.css         copied so /static/... resolves when output/ is served
+  script.js                copied as-is when present
 
 compiler_output/
   ast_python.json
   ast_jinja.json
   semantic_report.txt
   generation_log.txt
+```
+
+Templates link to Flask routes (`/add`, `/product/1`), which do not exist as files in a static
+folder. `RouteExtractor` reads `@app.route` + `render_template` pairs out of the Python AST, and
+the generator rewrites `href`/`action` to the generated file names (`/product/2` →
+`product_details_2.html`). One page is emitted per element of a route-backed collection, so every
+link in `output/` resolves — requirement 6's "smooth navigation".
+
+Serve it, do not open with `file://` — the `/static/...` paths need a web root:
+
+```bash
+cd output && python -m http.server 8123
 ```
 
 `app.py` / `style.css` / `script.js` are **support files** — they are copied to the output
@@ -206,35 +222,45 @@ Candidate checks, all detectable with what the AST already holds:
 - duplicate `{% block %}` names in one template
 - a loop variable used outside its `{% for %}` scope
 
-### 2. Code generation (requirement 5)
-**Split between two people — see `codeGenerationPlan.md` for the full task breakdown, the
-interfaces between the two parts, and the per-side definition of done. Read it before starting
-any generation work.** Yahya is Part A (tree preparation), khaled is Part B (emission and output).
+### 2. Delete-product interface (requirement 6)
+`app.py` has list / add / details but no delete route, and there is no delete template. This is
+the only requirement still incomplete. Adding an `@app.route("/delete/<int:id>")` plus a link in
+`index.jinja` is enough; the generator picks up new routes and templates automatically.
 
-An `HtmlGenerator extends AbstractASTVisitor` walking the linked template AST and emitting
-HTML into `output/`, plus a `generation_log.txt`. Three things must be built first:
-
-- **Template inheritance is not resolved.** `{% extends %}` and `{% block %}` are parsed into
-  nodes, but base and child are never merged. To emit a real page you must render
-  `base.jinja` and substitute its `{% block content %}` with the child's block body.
-- **Loops must iterate all elements.** `JinjaContextLinker` binds the loop variable to the
-  *first* element only (`elementType()`), which is right for checking but not for output.
-  The generator must use `JinjaForNode.getResolvedData()` — it holds the **full** `ListNode` —
-  and re-bind the variable per element.
-- **Jinja inside HTML attributes is still a raw string.** `<img src="/static/uploads/{{ p.photo }}">`
-  keeps its value as plain text in `HtmlTagNode.attributes`, so it is never linked or
-  substituted. Attribute values need to be parsed into segments (text + `JinjaExprNode`)
-  before generation can fill them in.
-
-### 3. AST JSON output
-`compiler_output/ast_python.json` and `ast_jinja.json`. Cheap: add `toJson()` alongside
-`label()`/`children()` on `ASTNode` and let each node contribute its own fields.
-
-### 4. Delete-product interface (requirement 6)
-`app.py` has list / add / details but no delete route, and there is no delete template.
-
-### 5. `script.js`
+### 3. `script.js`
 Mentioned as an optional input that must be copied to `output/`. Not present in the repo.
+`OutputWriter.copySupportFiles()` already copies it when it exists.
+
+---
+
+## Code generation — how it works (requirement 5, done)
+
+Built as a two-person split; `codeGenerationPlan.md` has the original task breakdown.
+Yahya did Part A (tree preparation), Yazan did Part B (emission and output).
+
+The pipeline in `Main.generate()`:
+
+1. `RouteExtractor` pulls `@app.route(...)` → `render_template(...)` pairs from the Python AST.
+2. `planPages()` decides what to emit: one page per template, plus one page per element for a
+   template reached by a dynamic route (`/product/<int:id>` → `product_details_1.html`, …).
+   `ContextExtractor.getCollections()` supplies the backing list for that.
+3. `TemplateInheritanceResolver.resolve()` merges `{% extends %}` / `{% block %}` so a child
+   template becomes one complete page. **It mutates the trees it is given**, so `Main` re-parses
+   the template set for every page — otherwise two children of one base overwrite each other.
+4. `HtmlGenerator` walks the merged tree and emits HTML, resolving variables with its own scope
+   stack (it deliberately ignores `JinjaExprNode.getResolvedValue()`, which is bound to the
+   *first* list element for checking purposes only) and rewriting `href`/`action` to file names.
+5. `OutputWriter` / `CompilerOutputWriter` write `output/` and `compiler_output/`.
+
+Dynamic HTML attributes are real nodes: `HTMLASTBuilder` splits `src="/x/{{ p.photo }}"` into
+`TextNode` + `JinjaExprNode` inside an `HtmlAttributeNode`. Only *dynamic* attributes appear in
+`HtmlTagNode.children()`; static ones stay in `label()` alone. Because they are children, the
+inherited traversal reaches them, so `JinjaContextLinker` and `SemanticAnalyzer` handle attribute
+expressions with no code of their own.
+
+**Gotcha:** anything that visits `HtmlTagNode` must iterate `getChildren()` (elements only), not
+`children()` (attributes + elements), or attribute values get processed twice. `HtmlGenerator`
+does this correctly — copy it if you write another emitting visitor.
 
 ---
 

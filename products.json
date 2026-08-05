@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Keyboard",
+    "price": 25,
+    "photo": "kb.png",
+    "details": "Mechanical keyboard"
+  },
+  {
+    "id": 2,
+    "name": "Mouse",
+    "price": 15,
+    "photo": "ms.png",
+    "details": "Wireless optical mouse"
+  },
+  {
+    "id": 3,
+    "name": "test test ",
+    "price": "1",
+    "details": "test",
+    "photo": ""
+  },
+  {
+    "id": 4,
+    "name": "test test ",
+    "price": "1",
+    "details": "v",
+    "photo": "705246969_4442933612701421_4073550903489857252_n.jfif"
+  }
+]
