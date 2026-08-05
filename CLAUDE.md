@@ -40,7 +40,7 @@ Short version: **Python → bytecode → execution**, **Jinja → AST → HTML**
 | 1 | Lexer & Parser + syntax for Python, Jinja2, HTML, CSS | done |
 | 2 | Two ASTs (Python + Jinja2); generator passes the data array into the second tree | **done** |
 | 3 | Nodes apply OOP — Inheritance + Polymorphism; every node stores its name and line | **done** |
-| 4 | Semantic analysis — at least 5 semantic errors handled | **not started** |
+| 4 | Semantic analysis — at least 5 semantic errors handled | **done — 5 checks** (`SemanticAnalyzer` + `JinjaBlockBuilder` unclosed reporting → `compiler_output/semantic_report.txt`) |
 | 5 | Code generation — the generated parts must work together | **not started** |
 | 6 | Web interfaces: list products, add product, product details, delete product + smooth navigation | partial — delete missing |
 | 7 | Print each node and its children readably; print the whole tree with the symbol table | done |
@@ -163,7 +163,7 @@ The project JDK is **JBR 21**. `java`/`javac` on PATH is JDK 11 and will **not**
 code.
 
 ```bash
-"D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/jbr/bin/javac.exe" -encoding UTF-8 -cp dependencies/antlr-4.13.2-complete.jar -d out/production $(find src -name "*.java")
+"C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2025.2.6/jbr/bin/javac.exe" -encoding UTF-8 -cp dependencies/antlr-4.13.2-complete.jar -d out/production $(find src -name "*.java")
 ```
 
 Run `Main` (no arguments). It builds the Python AST, runs the generator, then walks every
