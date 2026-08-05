@@ -46,6 +46,18 @@ def add():
     return render_template("add_product.jinja")
 
 
+@app.route("/delete/<int:id>")
+def delete(id):
+    products = []
+    for p in read():
+        if p["id"] < id:
+            products.append(p)
+        if p["id"] > id:
+            products.append(p)
+    write(products)
+    return redirect("/")
+
+
 @app.route("/product/<int:id>")
 def product(id):
     for p in read():
