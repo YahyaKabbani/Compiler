@@ -2,8 +2,9 @@ package ast.python;
 
 import ast.ASTNode;
 
-public class AssignmentNode extends ASTNode {
+import java.util.List;
 
+public class AssignmentNode extends PythonNode {
     private final String name;
     private final ASTNode value;
 
@@ -13,19 +14,14 @@ public class AssignmentNode extends ASTNode {
         this.value = value;
     }
 
+    public String getName() { return name; }
+    public ASTNode getValue() { return value; }
+
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "Assignment " + name);
-        if (value != null) value.print(indent + "  ");
-    }
+    public String label() { return at("Assignment '" + name + "'"); }
 
-    public String getName() {
-        return name;
-    }
-
-    public ASTNode getValue() {
-        return value;
-    }
+    @Override
+    public List<ASTNode> children() { return kids().add(value).build(); }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }

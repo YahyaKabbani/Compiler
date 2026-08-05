@@ -1,126 +1,165 @@
 package visitor;
 
-import ast.*;
-import ast.python.*;
+import ast.ASTNode;
+import ast.python.AssignmentNode;
+import ast.python.CallNode;
+import ast.python.FunctionDefNode;
+import ast.python.ReturnNode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-public class ContextExtractor implements ASTVisitor {
+public class ContextExtractor extends AbstractASTVisitor {
+    private final Map<String, Map<String, ASTNode>> contexts = new LinkedHashMap<>();
 
-    private final Map<String, Map<String, String>> contexts = new LinkedHashMap<>();
+    private final Map<String, ASTNode> variables = new LinkedHashMap<>();
 
-    public Map<String, Map<String, String>> extract(ASTNode root) {
+    private final Map<String, FunctionDefNode> functions = new LinkedHashMap<>();
+
+    private final Map<String, ASTNode> loopVariables = new LinkedHashMap<>();
+
+    private static final int MAX_RESOLVE_DEPTH = 5;
+
+    public Map<String, Map<String, ASTNode>> extract(ASTNode root) {
+        contexts.clear();
+        variables.clear();
+        functions.clear();
+        loopVariables.clear();
+
+        if (root == null) return contexts;
+
+        root.accept(new DeclarationCollector());
+
         root.accept(this);
+
         return contexts;
     }
 
-    // ==================== PYTHON ====================
+    public Map<String, Map<String, ASTNode>> getContexts() { return contexts; }
 
-    @Override
-    public void visit(PythonProgramNode node) {
-        for (ASTNode s : node.getStatements()) s.accept(this);
-    }
+    private class DeclarationCollector extends AbstractASTVisitor {
+        @Override
+        public void visit(AssignmentNode node) {
+            variables.putIfAbsent(node.getName(), node.getValue());
+            visitChildren(node);
+        }
 
-    @Override
-    public void visit(FunctionDefNode node) {
-        for (ASTNode s : node.getBody()) s.accept(this);
-    }
+        @Override
+        public void visit(FunctionDefNode node) {
+            functions.put(node.getName(), node);
+            visitChildren(node);
+        }
 
-    @Override
-    public void visit(ReturnNode node) {
-        if (node.getValue() != null) node.getValue().accept(this);
-    }
-
-    @Override
-    public void visit(AssignmentNode node) {
-        if (node.getValue() != null) node.getValue().accept(this);
+        @Override
+        public void visit(ast.python.ForNode node) {
+            loopVariables.putIfAbsent(node.getVar(), node.getIterable());
+            visitChildren(node);
+        }
     }
 
     @Override
     public void visit(CallNode node) {
-        tryExtractRenderTemplate(node);
-        node.getTarget().accept(this);
-        for (ASTNode arg : node.getArgs()) arg.accept(this);
+        if ("render_template".equals(node.calledFunctionName())) {
+            recordTemplate(node);
+        }
+        visitChildren(node);
     }
 
-    @Override
-    public void visit(IfNode node) {
-        for (ASTNode s : node.getBody()) s.accept(this);
-    }
-
-    @Override
-    public void visit(ast.python.ForNode node) {
-        for (ASTNode s : node.getBody()) s.accept(this);
-    }
-
-    @Override public void visit(BinaryOpNode node)      { node.getLeft().accept(this); node.getRight().accept(this); }
-    @Override public void visit(AttributeNode node)     { node.getObject().accept(this); }
-    @Override public void visit(NameNode node)          { /* no-op */ }
-    @Override public void visit(LiteralNode node)       { /* no-op */ }
-    @Override public void visit(KeywordArgumentNode node) { if (node.getValue() != null) node.getValue().accept(this); }
-
-    // ==================== HTML & CSS — not used ====================
-
-    @Override public void visit(HtmlDocumentNode node)  { /* no-op */ }
-    @Override public void visit(HtmlTagNode node)       { /* no-op */ }
-    @Override public void visit(JinjaNode node)         { /* no-op */ }
-    @Override public void visit(TextNode node)          { /* no-op */ }
-    @Override public void visit(ast.ForNode node)       { /* no-op */ }
-    @Override public void visit(CssStylesheetNode node) { /* no-op */ }
-    @Override public void visit(CssRuleSetNode node)    { /* no-op */ }
-    @Override public void visit(CssDeclarationNode node){ /* no-op */ }
-
-    // ==================== Helpers ====================
-
-    private void tryExtractRenderTemplate(CallNode call) {
-        String funcName = resolveName(call.getTarget());
-        if (!"render_template".equals(funcName)) return;
-
+    private void recordTemplate(CallNode call) {
         List<ASTNode> args = call.getArgs();
         if (args.isEmpty()) return;
 
-        String templateName = resolveValue(args.get(0));
-        if (templateName == null) return;
-        templateName = templateName.replaceAll("^\"|\"$|^'|'$", "");
+        String templateName = unquote(args.get(0).describe());
+        if (templateName == null || templateName.isEmpty()) return;
 
-        Map<String, String> ctx = contexts.computeIfAbsent(templateName, k -> new LinkedHashMap<>());
+        Map<String, ASTNode> ctx =
+                contexts.computeIfAbsent(templateName, k -> new LinkedHashMap<>());
 
-        int positionalIndex = 1;
+        int positional = 1;
         for (int i = 1; i < args.size(); i++) {
             ASTNode arg = args.get(i);
-            if (arg instanceof KeywordArgumentNode kw) {
-                ctx.put(kw.getName(), resolveValue(kw.getValue()));
-            } else {
-                ctx.put("arg" + positionalIndex++, resolveValue(arg));
-            }
+
+            String name = arg.keywordName();
+            if (name == null) name = "arg" + positional++;
+
+            ctx.put(name, resolveData(arg.keywordValue(), 0));
         }
     }
 
-    private String resolveName(ASTNode node) {
-        if (node instanceof NameNode n)      return n.getName();
-        if (node instanceof AttributeNode a) return a.getAttribute();
+    private ASTNode resolveData(ASTNode value, int depth) {
+        if (value == null || depth >= MAX_RESOLVE_DEPTH) return value;
+        if (value.isDataValue()) return value;
+
+        String variable = value.asVariableName();
+        if (variable != null) {
+            ASTNode bound = variables.get(variable);
+            if (bound != null && bound != value) {
+                ASTNode resolved = resolveData(bound, depth + 1);
+                if (resolved != null && resolved.isDataValue()) return resolved;
+            }
+
+            ASTNode iterable = loopVariables.get(variable);
+            if (iterable != null) {
+                ASTNode source = resolveData(iterable, depth + 1);
+                ASTNode element = source != null ? source.elementType() : null;
+                if (element != null) return element;
+            }
+
+            return bound != null ? bound : value;
+        }
+
+        String function = value.calledFunctionName();
+        if (function != null) {
+            FunctionDefNode def = functions.get(function);
+            if (def != null) {
+                ASTNode returned = resolveFromReturns(def, depth);
+                if (returned != null) return returned;
+            }
+        }
+
+        return value;
+    }
+
+    private ASTNode resolveFromReturns(FunctionDefNode def, int depth) {
+        ReturnCollector collector = new ReturnCollector();
+        def.accept(collector);
+
+        for (ASTNode returned : collector.values) {
+            ASTNode resolved = resolveData(returned, depth + 1);
+            if (resolved != null && resolved.isDataValue()) return resolved;
+        }
         return null;
     }
 
-    private String resolveValue(ASTNode node) {
-        if (node instanceof KeywordArgumentNode kw) return resolveValue(kw.getValue());
-        if (node instanceof LiteralNode l)           return l.getValue();
-        if (node instanceof NameNode n)              return n.getName();
-        if (node instanceof CallNode c)              return resolveName(c.getTarget()) + "(...)";
-        if (node instanceof AttributeNode a)         return resolveValue(a.getObject()) + "." + a.getAttribute();
-        return null;
+    private static class ReturnCollector extends AbstractASTVisitor {
+        final List<ASTNode> values = new ArrayList<>();
+
+        @Override
+        public void visit(ReturnNode node) {
+            if (node.getValue() != null) values.add(node.getValue());
+            visitChildren(node);
+        }
+    }
+
+    private static String unquote(String s) {
+        return s == null ? null : s.replaceAll("^\"|\"$|^'|'$", "");
     }
 
     public void dump() {
-        System.out.println("===== CONTEXT EXTRACTOR =====");
+        System.out.println("===== CONTEXT EXTRACTOR (Python → Jinja) =====");
         if (contexts.isEmpty()) {
             System.out.println("  (no render_template calls found)");
             return;
         }
-        for (var entry : contexts.entrySet()) {
+        for (Map.Entry<String, Map<String, ASTNode>> entry : contexts.entrySet()) {
             System.out.println("  Template: " + entry.getKey());
-            for (var v : entry.getValue().entrySet()) {
-                System.out.println("    " + v.getKey() + " = " + v.getValue());
+            for (Map.Entry<String, ASTNode> v : entry.getValue().entrySet()) {
+                ASTNode value = v.getValue();
+                System.out.println("    " + v.getKey() + " = "
+                        + (value == null ? "null" : value.describe())
+                        + (value != null && value.isDataValue() ? "   [resolved data]" : ""));
             }
         }
     }

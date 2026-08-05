@@ -4,9 +4,16 @@ import json, os
 app = Flask(__name__)
 UPLOAD = "static/uploads"
 
+PRODUCTS = [
+    {"id": 1, "name": "Keyboard", "price": 25, "photo": "kb.png", "details": "Mechanical keyboard"},
+    {"id": 2, "name": "Mouse", "price": 15, "photo": "ms.png", "details": "Wireless optical mouse"}
+]
+
 
 def read():
-    return json.load(open("products.json"))
+    if os.path.exists("products.json"):
+        return json.load(open("products.json"))
+    return PRODUCTS
 
 
 def write(data):
@@ -15,7 +22,7 @@ def write(data):
 
 @app.route("/")
 def home():
-    return render_template("index.html", products=read())
+    return render_template("index.jinja", products=read())
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -35,14 +42,14 @@ def add():
         write(products)
         return redirect("/")
 
-    return render_template("add.html")
+    return render_template("add_product.jinja")
 
 
 @app.route("/product/<int:id>")
 def product(id):
     for p in read():
         if p["id"] == id:
-            return render_template("details.html", product=p)
+            return render_template("product_details.jinja", product=p)
 
 
 app.run(debug=True, port=5001)

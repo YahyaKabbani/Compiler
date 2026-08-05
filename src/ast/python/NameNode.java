@@ -1,9 +1,6 @@
 package ast.python;
 
-import ast.ASTNode;
-
-public class NameNode extends ASTNode {
-
+public class NameNode extends PythonNode {
     private final String name;
 
     public NameNode(String name, int line) {
@@ -11,14 +8,19 @@ public class NameNode extends ASTNode {
         this.name = name;
     }
 
-    @Override
-    public void print(String indent) {
-        System.out.println(indent + getNodeName() + "(" + name + ") @line " + getLine());
-    }
+    public String getName() { return name; }
 
-    public String getName() {
-        return name;
-    }
+    @Override
+    public String label() { return at("Name(" + name + ")"); }
+
+    @Override
+    public String describe() { return name; }
+
+    @Override
+    public String asVariableName() { return name; }
+
+    @Override
+    public String asCallableName() { return name; }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }

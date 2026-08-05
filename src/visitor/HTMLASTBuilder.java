@@ -1,43 +1,24 @@
 package visitor;
-import java.util.*;
-import ast.ASTNode;
-import ast.HtmlDocumentNode;
+
+import ast.*;
 import gen.HTMLJinja2Parser;
 import gen.HTMLJinja2ParserBaseVisitor;
-import ast.HtmlTagNode;
-import ast.TextNode;
-import ast.JinjaNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class HTMLASTBuilder
-        extends HTMLJinja2ParserBaseVisitor<ASTNode> {
-
+public class HTMLASTBuilder extends HTMLJinja2ParserBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitHtmlDocument(HTMLJinja2Parser.HtmlDocumentContext ctx) {
-
-        List<ASTNode> children = new ArrayList<>();
-
-        for (var child : ctx.children) {
-            ASTNode node = visit(child);
-            if (node != null) {
-                children.add(node);
-            }
-        }
-
-        return new HtmlDocumentNode(children, ctx.start.getLine());
+        return new HtmlDocumentNode(visitAll(ctx.children), ctx.start.getLine());
     }
-
-
 
     @Override
     public ASTNode visitHtmlElement(HTMLJinja2Parser.HtmlElementContext ctx) {
-
-        // CASE 1: normal HTML tag
         if (ctx.TAG_OPEN() != null && ctx.TAG_NAME() != null && !ctx.TAG_NAME().isEmpty()) {
-
             String tag = ctx.TAG_NAME(0).getText();
 
             Map<String, String> attributes = new LinkedHashMap<>();
@@ -50,76 +31,101 @@ public class HTMLASTBuilder
             }
 
             List<ASTNode> children = new ArrayList<>();
-
             if (ctx.htmlContent() != null && ctx.htmlContent().children != null) {
-                for (ParseTree childCtx : ctx.htmlContent().children) {
-                    ASTNode child = visit(childCtx);
-                    if (child != null) {
-                        children.add(child);
-                    }
-                }
+                children = visitAll(ctx.htmlContent().children);
             }
-
 
             return new HtmlTagNode(tag, attributes, children, ctx.start.getLine());
         }
 
-        // CASE 2: jinja inside htmlElement
-        if (ctx.jinja() != null) {
-            return visit(ctx.jinja());
-        }
+        if (ctx.jinja() != null) return visit(ctx.jinja());
 
-        // CASE 3: script/style (optional later)
-        if (ctx.script() != null) {
-            return new TextNode(ctx.getText(), ctx.start.getLine());
-        }
+        if (ctx.script() != null) return new TextNode(ctx.getText(), ctx.start.getLine());
+        if (ctx.style() != null)  return new TextNode(ctx.getText(), ctx.start.getLine());
 
-        if (ctx.style() != null) {
-            return new TextNode(ctx.getText(), ctx.start.getLine());
-        }
-
-        // OTHERWISE: ignore
         return null;
     }
 
+    @Override
     public ASTNode visitHtmlChardata(HTMLJinja2Parser.HtmlChardataContext ctx) {
-        return new TextNode(ctx.getText(), ctx.start.getLine());
+        TextNode text = new TextNode(ctx.getText(), ctx.start.getLine());
+
+        return text.isBlank() ? null : text;
     }
-    public ASTNode visitJinja(HTMLJinja2Parser.JinjaContext ctx) {
 
-        if (ctx.JINJA_EXPR() != null) {
-            return new JinjaNode("EXPR", ctx.getText(), ctx.start.getLine());
-        }
-
-        if (ctx.JINJA_STMT() != null) {
-            return new JinjaNode("STMT", ctx.getText(), ctx.start.getLine());
-        }
-
-        if (ctx.JINJA_COMMENT() != null) {
-            return new JinjaNode("COMMENT", ctx.getText(), ctx.start.getLine());
-        }
-
-        return null;
-    }
     @Override
     public ASTNode visitHtmlElements(HTMLJinja2Parser.HtmlElementsContext ctx) {
-
-        List<ASTNode> nodes = new ArrayList<>();
-
-        for (var child : ctx.children) {
-            ASTNode n = visit(child);
-            if (n != null) {
-                nodes.add(n);
-            }
-        }
-
-        // unwrap single real element
-        if (nodes.size() == 1) {
-            return nodes.get(0);
-        }
-
-        // group multiple nodes (safe fallback)
+        List<ASTNode> nodes = visitAll(ctx.children);
+        if (nodes.size() == 1) return nodes.get(0);
         return new HtmlTagNode("__group__", nodes, ctx.start.getLine());
     }
 
+    @Override
+    public ASTNode visitJinja(HTMLJinja2Parser.JinjaContext ctx) {
+        String raw = ctx.getText();
+        int line = ctx.start.getLine();
+
+        if (ctx.JINJA_EXPR() != null)    return new JinjaExprNode(raw, line);
+        if (ctx.JINJA_COMMENT() != null) return new JinjaCommentNode(raw, line);
+        if (ctx.JINJA_STMT() != null)    return buildStatement(raw, line);
+
+        return null;
+    }
+
+    private ASTNode buildStatement(String raw, int line) {
+        String body = raw.replace("{%", "").replace("%}", "").trim();
+        String[] parts = body.split("\\s+");
+        String keyword = parts.length > 0 ? parts[0] : "";
+
+        switch (keyword) {
+            case "for":
+
+                if (parts.length >= 4) {
+                    return new JinjaForNode(parts[1], parts[3], new ArrayList<>(), raw, line);
+                }
+                return new JinjaRawStmtNode(keyword, raw, line);
+
+            case "endfor":
+                return new JinjaEndForNode(raw, line);
+
+            case "if":
+                return new JinjaIfNode(joinFrom(parts, 1), new ArrayList<>(), raw, line);
+
+            case "endif":
+                return new JinjaEndIfNode(raw, line);
+
+            case "block":
+                return new JinjaBlockNode(
+                        parts.length > 1 ? parts[1] : "",
+                        new ArrayList<>(), raw, line);
+
+            case "endblock":
+                return new JinjaEndBlockNode(raw, line);
+
+            case "extends":
+                return new JinjaExtendsNode(unquote(joinFrom(parts, 1)), raw, line);
+
+            default:
+                return new JinjaRawStmtNode(keyword, raw, line);
+        }
+    }
+
+    private List<ASTNode> visitAll(List<? extends ParseTree> children) {
+        List<ASTNode> nodes = new ArrayList<>();
+        if (children == null) return nodes;
+        for (ParseTree child : children) {
+            ASTNode node = visit(child);
+            if (node != null) nodes.add(node);
+        }
+        return nodes;
+    }
+
+    private static String joinFrom(String[] parts, int from) {
+        return String.join(" ", java.util.Arrays.asList(parts).subList(
+                Math.min(from, parts.length), parts.length));
+    }
+
+    private static String unquote(String s) {
+        return s.replaceAll("^\"|\"$|^'|'$", "");
+    }
 }

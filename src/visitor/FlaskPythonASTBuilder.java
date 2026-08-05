@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode> {
-
-    // ================= PROGRAM =================
-
     @Override
     public ASTNode visitProgram(FlaskPythonParser.ProgramContext ctx) {
         List<ASTNode> statements = new ArrayList<>();
@@ -24,8 +21,6 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
         return new PythonProgramNode(statements, ctx.start.getLine());
     }
 
-    // ================= STATEMENT DISPATCH =================
-
     @Override
     public ASTNode visitStatement(FlaskPythonParser.StatementContext ctx) {
         if (ctx.simpleStmt() != null) return visit(ctx.simpleStmt());
@@ -33,7 +28,21 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
         return null;
     }
 
-    // ================= DECORATED FUNCTION =================
+    @Override
+    public ASTNode visitImportStmt(FlaskPythonParser.ImportStmtContext ctx) {
+        List<String> names = new ArrayList<>();
+        for (var id : ctx.IDENT()) names.add(id.getText());
+        return new ImportNode(null, names, ctx.start.getLine());
+    }
+
+    @Override
+    public ASTNode visitFromImportStmt(FlaskPythonParser.FromImportStmtContext ctx) {
+        List<String> names = new ArrayList<>();
+        for (var id : ctx.IDENT()) names.add(id.getText());
+
+        String module = names.isEmpty() ? null : names.remove(0);
+        return new ImportNode(module, names, ctx.start.getLine());
+    }
 
     @Override
     public ASTNode visitDecoratedDef(FlaskPythonParser.DecoratedDefContext ctx) {
@@ -52,8 +61,6 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
                 funcNode.getLine()
         );
     }
-
-    // ================= FUNCTIONS =================
 
     @Override
     public ASTNode visitFunctionDef(FlaskPythonParser.FunctionDefContext ctx) {
@@ -80,8 +87,6 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
         );
     }
 
-    // ================= ASSIGNMENT =================
-
     @Override
     public ASTNode visitAssignment(FlaskPythonParser.AssignmentContext ctx) {
         return new AssignmentNode(
@@ -91,8 +96,6 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
         );
     }
 
-    // ================= RETURN =================
-
     @Override
     public ASTNode visitReturnStmt(FlaskPythonParser.ReturnStmtContext ctx) {
         return new ReturnNode(
@@ -101,10 +104,8 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
         );
     }
 
-    // ================= ARGUMENT =================
     @Override
     public ASTNode visitArgument(FlaskPythonParser.ArgumentContext ctx) {
-        // keyword arg: IDENT ASSIGN expr  (e.g. products=read())
         if (ctx.IDENT() != null && ctx.ASSIGN() != null) {
             return new KeywordArgumentNode(
                     ctx.IDENT().getText(),
@@ -112,21 +113,16 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
                     ctx.start.getLine()
             );
         }
-        // positional arg: expr
+
         return visit(ctx.expr());
     }
 
-    // ================= EXPRESSIONS =================
-
     @Override
     public ASTNode visitExpr(FlaskPythonParser.ExprContext ctx) {
-
-        // ---------- BASE CASE ----------
         if (ctx.atom() != null) {
             return visit(ctx.atom());
         }
 
-        // ---------- ATTRIBUTE ACCESS ----------
         if (ctx.DOT() != null) {
             ASTNode obj = visit(ctx.expr(0));
             return new AttributeNode(
@@ -136,7 +132,6 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
             );
         }
 
-        // ---------- FUNCTION CALL ----------
         if (ctx.LPAREN() != null) {
             ASTNode target = visit(ctx.expr(0));
 
@@ -158,7 +153,14 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
             return new CallNode(target, args, ctx.start.getLine());
         }
 
-        // ---------- BINARY OPERATORS ----------
+        if (ctx.LBRACK() != null) {
+            return new SubscriptNode(
+                    visit(ctx.expr(0)),
+                    visit(ctx.expr(1)),
+                    ctx.start.getLine()
+            );
+        }
+
         if (ctx.expr().size() == 2) {
             return new BinaryOpNode(
                     visit(ctx.expr(0)),
@@ -171,8 +173,35 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
         return null;
     }
 
-    // ================= ATOMS =================
-    // CRITICAL: without this, Name/Flask/__name__ becomes null -> your crash
+    @Override
+    public ASTNode visitListLiteral(FlaskPythonParser.ListLiteralContext ctx) {
+        List<ASTNode> elements = new ArrayList<>();
+        for (var e : ctx.expr()) {
+            ASTNode node = visit(e);
+            if (node != null) elements.add(node);
+        }
+        return new ListNode(elements, ctx.start.getLine());
+    }
+
+    @Override
+    public ASTNode visitDictLiteral(FlaskPythonParser.DictLiteralContext ctx) {
+        List<DictEntryNode> entries = new ArrayList<>();
+        for (var e : ctx.dictEntry()) {
+            ASTNode node = visit(e);
+            if (node != null) entries.add((DictEntryNode) node);
+        }
+        return new DictNode(entries, ctx.start.getLine());
+    }
+
+    @Override
+    public ASTNode visitDictEntry(FlaskPythonParser.DictEntryContext ctx) {
+        return new DictEntryNode(
+                visit(ctx.expr(0)),
+                visit(ctx.expr(1)),
+                ctx.start.getLine()
+        );
+    }
+
     @Override
     public ASTNode visitAtom(FlaskPythonParser.AtomContext ctx) {
         int line = ctx.start.getLine();
@@ -184,11 +213,10 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
         if (ctx.FALSE() != null) return new LiteralNode("False", line);
         if (ctx.NONE() != null) return new LiteralNode("None", line);
 
-        // If you later implement dict/list nodes properly, you can override those visitors too.
         if (ctx.dictLiteral() != null) return visit(ctx.dictLiteral());
         if (ctx.listLiteral() != null) return visit(ctx.listLiteral());
 
-        if (ctx.expr() != null) return visit(ctx.expr()); // (expr)
+        if (ctx.expr() != null) return visit(ctx.expr());
 
         return null;
     }
@@ -218,5 +246,4 @@ public class FlaskPythonASTBuilder extends FlaskPythonParserBaseVisitor<ASTNode>
 
         return new ForNode(var, iterable, body, ctx.start.getLine());
     }
-
 }

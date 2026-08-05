@@ -1,9 +1,6 @@
 package ast.python;
 
-import ast.ASTNode;
-
-public class LiteralNode extends ASTNode {
-
+public class LiteralNode extends PythonNode {
     public enum LiteralType { STRING, NUMBER, BOOLEAN, NONE }
 
     private final String value;
@@ -23,13 +20,22 @@ public class LiteralNode extends ASTNode {
     }
 
     public String getValue() { return value; }
+
     public LiteralType getType() { return type; }
+
+    public String getRawValue() {
+        return value.replaceAll("^\"|\"$|^'|'$", "");
+    }
+
+    @Override
+    public boolean isDataValue() { return true; }
+
+    @Override
+    public String label() { return at("Literal[" + type + "](" + value + ")"); }
+
+    @Override
+    public String describe() { return value; }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }
-
-    @Override
-    public void print(String indent) {
-        System.out.println(indent + getNodeName() + "[" + type + "](" + value + ") @line " + getLine());
-    }
 }

@@ -1,4 +1,5 @@
-package gen;// Generated from D:/Applications/Installed/IntelliJ IDEA Community Edition 2025.2.4/projects/Antlr - Copy/grammarPythonFlask/FlaskPythonParser.g4 by ANTLR 4.13.2
+// Generated from FlaskPythonParser.g4 by ANTLR 4.13.2
+package gen;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -165,4 +166,11 @@ public class FlaskPythonParserBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitListLiteral(FlaskPythonParser.ListLiteralContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitLayout(FlaskPythonParser.LayoutContext ctx) { return visitChildren(ctx); }
 }

@@ -1,10 +1,10 @@
 package ast.python;
 
 import ast.ASTNode;
+
 import java.util.List;
 
-public class FunctionDefNode extends ASTNode {
-
+public class FunctionDefNode extends PythonNode {
     private final String name;
     private final List<String> params;
     private final List<ASTNode> body;
@@ -24,39 +24,23 @@ public class FunctionDefNode extends ASTNode {
         this.decorators = decorators;
     }
 
+    public String getName() { return name; }
+    public List<String> getParams() { return params; }
+    public List<ASTNode> getBody() { return body; }
+    public List<ASTNode> getDecorators() { return decorators; }
+
     @Override
-    public void print(String indent) {
-        System.out.println(indent + getNodeName() + " " + name + " @line " + getLine());
-
-        if (!decorators.isEmpty()) {
-            System.out.println(indent + "  Decorators:");
-            for (ASTNode d : decorators) {
-                d.print(indent + "    ");
-            }
-        }
-
-        System.out.println(indent + "  Params: " + params);
-        System.out.println(indent + "  Body:");
-        for (ASTNode stmt : body) {
-            stmt.print(indent + "    ");
-        }
+    public String label() {
+        return at("FunctionDef '" + name + "' params=" + params);
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public List<ASTNode> children() {
+        return kids().addAll(decorators).addAll(body).build();
     }
 
-    public List<String> getParams() {
-        return params;
-    }
-
-    public List<ASTNode> getBody() {
-        return body;
-    }
-
-    public List<ASTNode> getDecorators() {
-        return decorators;
-    }
+    @Override
+    public String describe() { return name + "(...)"; }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }

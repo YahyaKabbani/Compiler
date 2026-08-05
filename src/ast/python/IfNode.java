@@ -1,8 +1,10 @@
 package ast.python;
+
 import ast.ASTNode;
+
 import java.util.List;
-// ast/python/IfNode.java
-public class IfNode extends ASTNode {
+
+public class IfNode extends PythonNode {
     private final ASTNode condition;
     private final List<ASTNode> body;
 
@@ -16,12 +18,11 @@ public class IfNode extends ASTNode {
     public List<ASTNode> getBody() { return body; }
 
     @Override
-    public void accept(visitor.ASTVisitor v) { v.visit(this); }
+    public String label() { return at("If"); }
 
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "If @line " + getLine());
-        condition.print(indent + "  ");
-        for (ASTNode n : body) n.print(indent + "  ");
-    }
+    public List<ASTNode> children() { return kids().add(condition).addAll(body).build(); }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

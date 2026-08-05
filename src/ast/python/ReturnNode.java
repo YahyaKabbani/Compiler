@@ -2,8 +2,9 @@ package ast.python;
 
 import ast.ASTNode;
 
-public class ReturnNode extends ASTNode {
+import java.util.List;
 
+public class ReturnNode extends PythonNode {
     private final ASTNode value;
 
     public ReturnNode(ASTNode value, int line) {
@@ -11,15 +12,13 @@ public class ReturnNode extends ASTNode {
         this.value = value;
     }
 
-    @Override
-    public void print(String indent) {
-        System.out.println(indent + getNodeName() + " @line " + getLine());
-        value.print(indent + "  ");
-    }
+    public ASTNode getValue() { return value; }
 
-    public ASTNode getValue() {
-        return value;
-    }
+    @Override
+    public String label() { return at("Return"); }
+
+    @Override
+    public List<ASTNode> children() { return kids().add(value).build(); }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }

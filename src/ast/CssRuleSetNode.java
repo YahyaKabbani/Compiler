@@ -2,7 +2,7 @@ package ast;
 
 import java.util.List;
 
-public class CssRuleSetNode extends ASTNode {
+public class CssRuleSetNode extends CssNode {
     private final String selector;
     private final List<ASTNode> declarations;
 
@@ -16,11 +16,11 @@ public class CssRuleSetNode extends ASTNode {
     public List<ASTNode> getDeclarations() { return declarations; }
 
     @Override
-    public void accept(visitor.ASTVisitor v) { v.visit(this); }
+    public String label() { return at("CssRuleSet '" + selector + "'"); }
 
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "RULE: " + selector + " (line " + getLine() + ")");
-        for (ASTNode d : declarations) d.print(indent + "  ");
-    }
+    public List<ASTNode> children() { return kids().addAll(declarations).build(); }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

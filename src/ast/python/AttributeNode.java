@@ -2,8 +2,9 @@ package ast.python;
 
 import ast.ASTNode;
 
-public class AttributeNode extends ASTNode {
+import java.util.List;
 
+public class AttributeNode extends PythonNode {
     private final ASTNode object;
     private final String attribute;
 
@@ -13,20 +14,22 @@ public class AttributeNode extends ASTNode {
         this.attribute = attribute;
     }
 
+    public ASTNode getObject() { return object; }
+    public String getAttribute() { return attribute; }
+
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "Attribute");
-        object.print(indent + "  ");
-        System.out.println(indent + "  ." + attribute);
+    public String label() { return at("Attribute '." + attribute + "'"); }
+
+    @Override
+    public List<ASTNode> children() { return kids().add(object).build(); }
+
+    @Override
+    public String describe() {
+        return (object != null ? object.describe() : "?") + "." + attribute;
     }
 
-    public ASTNode getObject() {
-        return object;
-    }
-
-    public String getAttribute() {
-        return attribute;
-    }
+    @Override
+    public String asCallableName() { return attribute; }
 
     @Override
     public void accept(visitor.ASTVisitor v) { v.visit(this); }

@@ -2,7 +2,7 @@ package ast;
 
 import java.util.List;
 
-public class CssStylesheetNode extends ASTNode {
+public class CssStylesheetNode extends CssNode {
     private final List<ASTNode> children;
 
     public CssStylesheetNode(List<ASTNode> children, int line) {
@@ -13,11 +13,11 @@ public class CssStylesheetNode extends ASTNode {
     public List<ASTNode> getChildren() { return children; }
 
     @Override
-    public void accept(visitor.ASTVisitor v) { v.visit(this); }
+    public String label() { return at("CssStylesheet"); }
 
     @Override
-    public void print(String indent) {
-        System.out.println(indent + "CSS Stylesheet (line " + getLine() + ")");
-        for (ASTNode c : children) c.print(indent + "  ");
-    }
+    public List<ASTNode> children() { return kids().addAll(children).build(); }
+
+    @Override
+    public void accept(visitor.ASTVisitor v) { v.visit(this); }
 }

@@ -119,13 +119,14 @@ atom
     ;
 
 //  COLLECTIONS
+// Collections may span several lines. Python performs implicit line joining
+// inside brackets, but our lexer still emits NEWLINE/INDENT/DEDENT there, so
+// the layout tokens are skipped explicitly via `layout`.
 dictLiteral
     : LBRACE
-      (NEWLINE INDENT)?                 // "{\n    "
-      NEWLINE*
-      (dictEntry (COMMA NEWLINE* dictEntry)* COMMA?)?
-      NEWLINE*
-      (DEDENT)?
+      layout*
+      (dictEntry (COMMA layout* dictEntry)* COMMA?)?
+      layout*
       RBRACE
     ;
 
@@ -133,7 +134,17 @@ dictEntry
     : expr COLON expr
     ;
 
-
 listLiteral
-    : LBRACK (expr (COMMA expr)*)? RBRACK
+    : LBRACK
+      layout*
+      (expr (COMMA layout* expr)* COMMA?)?
+      layout*
+      RBRACK
+    ;
+
+// Layout tokens carry no meaning inside brackets.
+layout
+    : NEWLINE
+    | INDENT
+    | DEDENT
     ;
