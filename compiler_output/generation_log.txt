@@ -1,13 +1,13 @@
 [page]  add_product.jinja -> output/add_product.html (524 bytes)
 [link]  add_product.html:9  / -> index.html
 [link]  add_product.html:10  /add -> add_product.html
-[page]  index.jinja -> output/index.html (635 bytes)
+[page]  index.jinja -> output/index.html (633 bytes)
 [link]  index.html:9  / -> index.html
 [link]  index.html:10  /add -> add_product.html
 [loop]  index.html:4  {% for p in products %} -> 2 iterations
 [attr]  index.html:6  {{ p.photo }} -> kb.png
 [expr]  index.html:7  {{ p.name }} -> Keyboard
-[expr]  index.html:7  {{ p.price }} -> 2502
+[expr]  index.html:7  {{ p.price }} -> 25
 [attr]  index.html:8  {{ p.id }} -> 1
 [link]  index.html:8  /product/1 -> product_details_1.html
 [attr]  index.html:9  {{ p.id }} -> 1
@@ -17,21 +17,21 @@
 [attr]  index.html:8  {{ p.id }} -> 2
 [link]  index.html:8  /product/2 -> product_details_2.html
 [attr]  index.html:9  {{ p.id }} -> 2
-[page]  product_details.jinja -> output/product_details.html (439 bytes)
+[page]  product_details.jinja -> output/product_details.html (437 bytes)
 [link]  product_details.html:9  / -> index.html
 [link]  product_details.html:10  /add -> add_product.html
 [expr]  product_details.html:2  {{ product.name }} -> Keyboard
 [attr]  product_details.html:4  {{ product.photo }} -> kb.png
-[expr]  product_details.html:6  {{ product.price }} -> 2502
+[expr]  product_details.html:6  {{ product.price }} -> 25
 [expr]  product_details.html:7  {{ product.details }} -> Mechanical keyboard
 [link]  product_details.html:9  / -> index.html
 [attr]  product_details.html:10  {{ product.id }} -> 1
-[page]  product_details.jinja -> output/product_details_1.html (439 bytes)
+[page]  product_details.jinja -> output/product_details_1.html (437 bytes)
 [link]  product_details_1.html:9  / -> index.html
 [link]  product_details_1.html:10  /add -> add_product.html
 [expr]  product_details_1.html:2  {{ product.name }} -> Keyboard
 [attr]  product_details_1.html:4  {{ product.photo }} -> kb.png
-[expr]  product_details_1.html:6  {{ product.price }} -> 2502
+[expr]  product_details_1.html:6  {{ product.price }} -> 25
 [expr]  product_details_1.html:7  {{ product.details }} -> Mechanical keyboard
 [link]  product_details_1.html:9  / -> index.html
 [attr]  product_details_1.html:10  {{ product.id }} -> 1
