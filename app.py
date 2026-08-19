@@ -6,7 +6,7 @@ UPLOAD = "static/uploads"
 os.makedirs(UPLOAD, exist_ok=True)
 
 PRODUCTS = [
-    {"id": 1, "name": "Keyboard", "price": 2502, "photo": "kb.png", "details": "Mechanical keyboard"},
+    {"id": 1, "name": "Keyboard", "price": 25, "photo": "kb.png", "details": "Mechanical keyboard"},
     {"id": 2, "name": "Mouse", "price": 15, "photo": "ms.png", "details": "Wireless optical mouse"}
 ]
 

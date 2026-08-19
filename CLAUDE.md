@@ -42,7 +42,7 @@ Short version: **Python → bytecode → execution**, **Jinja → AST → HTML**
 | 3 | Nodes apply OOP — Inheritance + Polymorphism; every node stores its name and line | **done** |
 | 4 | Semantic analysis — at least 5 semantic errors handled | **done — 5 checks** (`SemanticAnalyzer` + `JinjaBlockBuilder` unclosed reporting → `compiler_output/semantic_report.txt`) |
 | 5 | Code generation — the generated parts must work together | **done** — `output/` pages generated, linked and navigable |
-| 6 | Web interfaces: list products, add product, product details, delete product + smooth navigation | partial — delete missing |
+| 6 | Web interfaces: list products, add product, product details, delete product + smooth navigation | **done** — all four routes + navigation |
 | 7 | Print each node and its children readably; print the whole tree with the symbol table | done |
 
 Grading note: groups are differentiated by **the quality and number of semantic errors handled**
@@ -222,12 +222,7 @@ Candidate checks, all detectable with what the AST already holds:
 - duplicate `{% block %}` names in one template
 - a loop variable used outside its `{% for %}` scope
 
-### 2. Delete-product interface (requirement 6)
-`app.py` has list / add / details but no delete route, and there is no delete template. This is
-the only requirement still incomplete. Adding an `@app.route("/delete/<int:id>")` plus a link in
-`index.jinja` is enough; the generator picks up new routes and templates automatically.
-
-### 3. `script.js`
+### 2. `script.js`
 Mentioned as an optional input that must be copied to `output/`. Not present in the repo.
 `OutputWriter.copySupportFiles()` already copies it when it exists.
 
