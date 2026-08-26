@@ -5,7 +5,13 @@ import ast.JinjaBlockNode;
 import ast.JinjaExprNode;
 import ast.JinjaExtendsNode;
 import ast.JinjaForNode;
+import ast.python.AssignmentNode;
 import ast.python.CallNode;
+import ast.python.ForNode;
+import ast.python.FunctionDefNode;
+import ast.python.ImportNode;
+import ast.python.NameNode;
+import ast.python.PythonProgramNode;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,11 +26,17 @@ import java.util.Map;
 import java.util.Set;
 
 public class SemanticAnalyzer extends AbstractASTVisitor {
+    private static final Set<String> PYTHON_BUILTINS = Set.of(
+            "__name__", "print", "len", "open", "range", "str", "int", "float",
+            "bool", "list", "dict", "set", "tuple", "input", "enumerate", "sorted",
+            "sum", "min", "max", "abs", "type", "isinstance", "zip", "map", "filter");
+
     private final Path templateDir;
     private final List<String> errors = new ArrayList<>();
     private final Set<String> blockNames = new HashSet<>();
     private final Map<String, Integer> childBlockLines = new LinkedHashMap<>();
     private final Deque<String> liveLoopVars = new ArrayDeque<>();
+    private final Deque<Set<String>> definedNames = new ArrayDeque<>();
     private final Set<String> everSeenLoopVars = new HashSet<>();
     private String currentFile;
     private ASTNode currentRecord;
@@ -38,6 +50,7 @@ public class SemanticAnalyzer extends AbstractASTVisitor {
 
     public void analyzePython(ASTNode root, String file) {
         currentFile = file;
+        definedNames.clear();
         if (root != null) root.accept(this);
     }
 
@@ -75,6 +88,62 @@ public class SemanticAnalyzer extends AbstractASTVisitor {
     }
 
     @Override
+    public void visit(PythonProgramNode node) {
+        definedNames.push(new HashSet<>());
+        visitChildren(node);
+        definedNames.pop();
+    }
+
+    @Override
+    public void visit(FunctionDefNode node) {
+        define(node.getName());
+        for (ASTNode decorator : node.getDecorators()) decorator.accept(this);
+        definedNames.push(new HashSet<>(node.getParams()));
+        for (ASTNode statement : node.getBody()) statement.accept(this);
+        definedNames.pop();
+    }
+
+    @Override
+    public void visit(AssignmentNode node) {
+        visitChildren(node);
+        define(node.getName());
+    }
+
+    @Override
+    public void visit(ForNode node) {
+        if (node.getIterable() != null) node.getIterable().accept(this);
+        define(node.getVar());
+        for (ASTNode statement : node.getBody()) statement.accept(this);
+    }
+
+    @Override
+    public void visit(ImportNode node) {
+        for (String name : node.getNames()) define(name);
+        visitChildren(node);
+    }
+
+    @Override
+    public void visit(NameNode node) {
+        if (!definedNames.isEmpty() && !isDefined(node.getName())) {
+            error("USED_BEFORE_ASSIGNMENT", currentFile, node.getLine(),
+                    "name '" + node.getName() + "' is read before any assignment gives it a value");
+        }
+        visitChildren(node);
+    }
+
+    private void define(String name) {
+        if (name != null && !definedNames.isEmpty()) definedNames.peek().add(name);
+    }
+
+    private boolean isDefined(String name) {
+        if (PYTHON_BUILTINS.contains(name)) return true;
+        for (Set<String> scope : definedNames) {
+            if (scope.contains(name)) return true;
+        }
+        return false;
+    }
+
+    @Override
     public void visit(JinjaExtendsNode node) {
         String parent = node.getParentTemplate();
         parentTemplate = parent;
@@ -100,6 +169,12 @@ public class SemanticAnalyzer extends AbstractASTVisitor {
         ASTNode previousRecord = currentRecord;
         String previousVar = currentLoopVar;
         ASTNode data = node.getResolvedData();
+        if (data != null && !data.isIterable()) {
+            error("NOT_ITERABLE", currentFile, node.getLine(),
+                    "{% for " + node.getVariable() + " in " + node.getIterable() + " %} — '"
+                            + node.getIterable() + "' resolves to " + data.describe()
+                            + ", not a list — cannot iterate");
+        }
         currentRecord = data != null ? data.elementType() : null;
         currentLoopVar = node.getVariable();
 
@@ -164,6 +239,72 @@ public class SemanticAnalyzer extends AbstractASTVisitor {
         @Override
         public void visit(JinjaBlockNode node) {
             names.add(node.getBlockName());
+            visitChildren(node);
+        }
+    }
+
+    public void checkRoutes(ASTNode pythonAst, String file) {
+        if (pythonAst == null) return;
+        RouteCollector collector = new RouteCollector();
+        pythonAst.accept(collector);
+
+        Map<String, RouteRegistration> claimed = new LinkedHashMap<>();
+        for (RouteRegistration registration : collector.registrations) {
+            RouteRegistration first = claimed.putIfAbsent(normalizeRoute(registration.path), registration);
+            if (first == null) continue;
+            String message = registration.path.equals(first.path)
+                    ? "@app.route(\"" + registration.path + "\") is already registered by '"
+                            + first.function + "' at line " + first.line
+                            + " — Flask refuses to start when one path is claimed twice"
+                    : "@app.route(\"" + registration.path + "\") matches the same URL shape as \""
+                            + first.path + "\" registered by '" + first.function + "' at line "
+                            + first.line + " — the two routes conflict";
+            error("DUPLICATE_ROUTE", file, registration.line, message);
+        }
+    }
+
+    private static String normalizeRoute(String path) {
+        return path.replaceAll("<[^>]*>", "<*>");
+    }
+
+    private static final class RouteRegistration {
+        private final String path;
+        private final String function;
+        private final int line;
+
+        RouteRegistration(String path, String function, int line) {
+            this.path = path;
+            this.function = function;
+            this.line = line;
+        }
+    }
+
+    private static final class RouteCollector extends AbstractASTVisitor {
+        private final List<RouteRegistration> registrations = new ArrayList<>();
+
+        @Override
+        public void visit(FunctionDefNode node) {
+            for (ASTNode decorator : node.getDecorators()) {
+                RouteCall call = new RouteCall();
+                decorator.accept(call);
+                if (call.path != null) {
+                    registrations.add(new RouteRegistration(call.path, node.getName(), call.line));
+                }
+            }
+            visitChildren(node);
+        }
+    }
+
+    private static final class RouteCall extends AbstractASTVisitor {
+        private String path;
+        private int line;
+
+        @Override
+        public void visit(CallNode node) {
+            if (path == null && "route".equals(node.calledFunctionName()) && !node.getArgs().isEmpty()) {
+                path = unquote(node.getArgs().get(0).describe());
+                line = node.getLine();
+            }
             visitChildren(node);
         }
     }

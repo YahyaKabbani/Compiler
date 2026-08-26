@@ -25,6 +25,9 @@ public class ListNode extends PythonNode {
     public boolean isDataValue() { return true; }
 
     @Override
+    public boolean isIterable() { return true; }
+
+    @Override
     public String label() { return at("List[" + elements.size() + " elements]"); }
 
     @Override

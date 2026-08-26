@@ -32,6 +32,8 @@ public abstract class ASTNode {
 
     public boolean isDataValue() { return false; }
 
+    public boolean isIterable() { return false; }
+
     public ASTNode lookup(String key) { return null; }
 
     public ASTNode elementType() { return null; }
