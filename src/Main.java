@@ -53,6 +53,7 @@ public class Main {
 
         SemanticAnalyzer analyzer = new SemanticAnalyzer(TEMPLATE_DIR);
         analyzer.analyzePython(pythonAst, PYTHON_FILE);
+        analyzer.checkRoutes(pythonAst, PYTHON_FILE);
 
         Map<String, ASTNode> allTemplates = parseTemplates();
 

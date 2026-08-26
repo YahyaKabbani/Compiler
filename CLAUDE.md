@@ -40,14 +40,16 @@ Short version: **Python → bytecode → execution**, **Jinja → AST → HTML**
 | 1 | Lexer & Parser + syntax for Python, Jinja2, HTML, CSS | done |
 | 2 | Two ASTs (Python + Jinja2); generator passes the data array into the second tree | **done** |
 | 3 | Nodes apply OOP — Inheritance + Polymorphism; every node stores its name and line | **done** |
-| 4 | Semantic analysis — at least 5 semantic errors handled | **done — 5 checks** (`SemanticAnalyzer` + `JinjaBlockBuilder` unclosed reporting → `compiler_output/semantic_report.txt`) |
+| 4 | Semantic analysis — at least 5 semantic errors handled | **done — 11 checks** (`SemanticAnalyzer` + `JinjaBlockBuilder` unclosed reporting → `compiler_output/semantic_report.txt`) |
 | 5 | Code generation — the generated parts must work together | **done** — `output/` pages generated, linked and navigable |
 | 6 | Web interfaces: list products, add product, product details, delete product + smooth navigation | **done** — all four routes + navigation |
 | 7 | Print each node and its children readably; print the whole tree with the symbol table | done |
 
 Grading note: groups are differentiated by **the quality and number of semantic errors handled**
-(requirement 4). Adding more checks there is still the highest-value work — see the candidate
-list at the bottom of this file.
+(requirement 4). 11 checks are implemented: the 5 baseline ones plus the 6 harder ones
+(`UNKNOWN_ATTRIBUTE`, `LOOP_VAR_OUT_OF_SCOPE`, `ORPHAN_BLOCK`, `NOT_ITERABLE`,
+`USED_BEFORE_ASSIGNMENT`, `DUPLICATE_ROUTE`) documented in `semanticChecksPlan.md`, which also
+explains how to demo each with a broken-input fixture.
 
 ---
 
@@ -160,9 +162,10 @@ instructor's example shape (`products = [ {...}, {...} ]` at module level) exact
 
 - **No `instanceof` in `src/ast` or `src/visitor`.** Instead of asking a node its type, ask it
   what it can do. The base `ASTNode` exposes the protocol: `describe()`, `lookup(key)`,
-  `elementType()`, `isDataValue()`, `opensBlock()`, `closesBlock()`, `setBody()`,
-  `asVariableName()`, `asCallableName()`, `calledFunctionName()`, `keywordName()`,
-  `keywordValue()`. Add to this protocol rather than reaching for a type test.
+  `elementType()`, `knownKeys()`, `isDataValue()`, `isIterable()`, `opensBlock()`,
+  `closesBlock()`, `setBody()`, `asVariableName()`, `asCallableName()`,
+  `calledFunctionName()`, `keywordName()`, `keywordValue()`. Add to this protocol rather than
+  reaching for a type test.
 - **Nodes never implement `print()`.** They implement `label()` (their own one line, always
   ending in `@line N`) and `children()`. `ASTNode.print()` and `ASTPrinter` do the rest.
 - **Visitors extend `AbstractASTVisitor`**, never implement `ASTVisitor` directly, so adding a
@@ -209,20 +212,7 @@ with `duplicate class: gen.<Class>`. Root `gen/` is dead weight — nothing impo
 
 ## Remaining work, in priority order
 
-### 1. Semantic analysis (requirement 4) — highest value, this is what's graded on
-Needs a `SemanticAnalyzer extends AbstractASTVisitor` producing `compiler_output/semantic_report.txt`.
-Candidate checks, all detectable with what the AST already holds:
-- a `{{ variable }}` used in a template that `render_template` never passes for that template
-- `{% extends "x.jinja" %}` where the parent template does not exist
-- `{% block %}` in a child with no matching block in the parent
-- `render_template("x.jinja")` where the template file does not exist
-- a Python name used before assignment / never defined (the symbol table already has scopes)
-- unclosed `{% for %}` / `{% if %}` (`JinjaBlockBuilder` currently flushes these silently —
-  it should report them)
-- duplicate `{% block %}` names in one template
-- a loop variable used outside its `{% for %}` scope
-
-### 2. `script.js`
+### 1. `script.js`
 Mentioned as an optional input that must be copied to `output/`. Not present in the repo.
 `OutputWriter.copySupportFiles()` already copies it when it exists.
 

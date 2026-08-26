@@ -25,6 +25,30 @@ Yahya's 3 (#1, #3, #5) are implemented on this branch, compiled, and verified �
 correctly against an injected-bug fixture (typo'd attribute, stray loop-var reference
 after `{% endfor %}`, mismatched child block name), reverted after confirming.
 
+Yazan's 3 (#2, #4, #6 — `NOT_ITERABLE`, `USED_BEFORE_ASSIGNMENT`, `DUPLICATE_ROUTE`) are
+implemented and verified the same way. The untouched repo still reports
+`No semantic errors found.`; an injected-bug `app.py` (a module-level dict passed as
+`products=` to `index.jinja`, a function reading `count` before `count = 0`, an exact
+duplicate of `@app.route("/product/<int:id>")`, and a `/product/<name>` shape conflict)
+produces, in one run:
+
+```
+[USED_BEFORE_ASSIGNMENT] app.py @line 27 — name 'count' is read before any assignment gives it a value
+[DUPLICATE_ROUTE] app.py @line 76 — @app.route("/product/<int:id>") is already registered by 'product' at line 69 — Flask refuses to start when one path is claimed twice
+[DUPLICATE_ROUTE] app.py @line 81 — @app.route("/product/<name>") matches the same URL shape as "/product/<int:id>" registered by 'product' at line 69 — the two routes conflict
+[NOT_ITERABLE] index.jinja @line 4 — {% for p in products %} — 'products' resolves to {1 entries}, not a list — cannot iterate
+```
+
+plus the expected `UNDEFINED_VARIABLE` cascade inside the now-dead loop body (with
+`products` a dict, `p` never binds — same root cause, not a false positive). Fixture
+reverted after confirming; line numbers refer to the edited fixture copy. All 11 checks
+now live in `SemanticAnalyzer`. New protocol method: `ASTNode.isIterable()` (default
+false, overridden only in `ListNode`). New wiring in `Main`: one call,
+`analyzer.checkRoutes(pythonAst, PYTHON_FILE)`, right after `analyzePython`. The
+`USED_BEFORE_ASSIGNMENT` tracker whitelists a small set of Python builtins
+(`PYTHON_BUILTINS` in `SemanticAnalyzer` — `__name__`, `open`, `len`, `print`, …); if a
+future `app.py` uses a builtin not in that set, add it there.
+
 **Breaking change for Yazan's merge:** `SemanticAnalyzer.analyzeTemplate` now takes a
 third parameter —
 
