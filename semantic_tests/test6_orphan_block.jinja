@@ -1,0 +1,6 @@
+{# TEST 6 — ORPHAN_BLOCK: child block name has no match in the parent template #}
+{# Expected: [ORPHAN_BLOCK] test6_orphan_block.jinja @line 4 — {% block sidebar %} has no matching block in parent 'base.jinja' — this override is silently dropped #}
+{% extends "base.jinja" %}
+{% block sidebar %}
+<h1>Test</h1>
+{% endblock %}

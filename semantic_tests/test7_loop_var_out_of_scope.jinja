@@ -1,0 +1,9 @@
+{# TEST 7 — LOOP_VAR_OUT_OF_SCOPE: p is referenced after its {% for %} already ended #}
+{# Expected: [LOOP_VAR_OUT_OF_SCOPE] test7_loop_var_out_of_scope.jinja @line 8 — {{ p.name }} uses loop variable 'p' outside its {% for %} block #}
+{% extends "base.jinja" %}
+{% block content %}
+{% for p in products %}
+<div class="product">item</div>
+{% endfor %}
+<p>{{ p.name }}</p>
+{% endblock %}
