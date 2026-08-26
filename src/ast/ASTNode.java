@@ -36,6 +36,8 @@ public abstract class ASTNode {
 
     public ASTNode elementType() { return null; }
 
+    public List<String> knownKeys() { return List.of(); }
+
     public String asVariableName() { return null; }
 
     public String asCallableName() { return null; }

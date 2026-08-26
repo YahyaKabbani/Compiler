@@ -54,6 +54,8 @@ public class Main {
         SemanticAnalyzer analyzer = new SemanticAnalyzer(TEMPLATE_DIR);
         analyzer.analyzePython(pythonAst, PYTHON_FILE);
 
+        Map<String, ASTNode> allTemplates = parseTemplates();
+
         for (Path template : findTemplates()) {
             String name = template.getFileName().toString();
 
@@ -63,7 +65,7 @@ public class Main {
             Map<String, ASTNode> context = contexts.get(name);
             JinjaContextLinker.link(templateAst, context);
 
-            analyzer.analyzeTemplate(templateAst, name);
+            analyzer.analyzeTemplate(templateAst, name, allTemplates);
             analyzer.reportUnclosed(name, unclosed);
 
             banner("TEMPLATE AST — " + name
