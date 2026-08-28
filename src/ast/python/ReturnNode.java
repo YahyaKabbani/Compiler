@@ -15,6 +15,9 @@ public class ReturnNode extends PythonNode {
     public ASTNode getValue() { return value; }
 
     @Override
+    public boolean isExitPoint() { return true; }
+
+    @Override
     public String label() { return at("Return"); }
 
     @Override

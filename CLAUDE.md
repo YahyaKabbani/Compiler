@@ -40,16 +40,21 @@ Short version: **Python → bytecode → execution**, **Jinja → AST → HTML**
 | 1 | Lexer & Parser + syntax for Python, Jinja2, HTML, CSS | done |
 | 2 | Two ASTs (Python + Jinja2); generator passes the data array into the second tree | **done** |
 | 3 | Nodes apply OOP — Inheritance + Polymorphism; every node stores its name and line | **done** |
-| 4 | Semantic analysis — at least 5 semantic errors handled | **done — 11 checks** (`SemanticAnalyzer` + `JinjaBlockBuilder` unclosed reporting → `compiler_output/semantic_report.txt`) |
+| 4 | Semantic analysis — at least 5 semantic errors handled | **done — 15 checks** (`SemanticAnalyzer` + `JinjaBlockBuilder` unclosed reporting → `compiler_output/semantic_report.txt`) |
 | 5 | Code generation — the generated parts must work together | **done** — `output/` pages generated, linked and navigable |
 | 6 | Web interfaces: list products, add product, product details, delete product + smooth navigation | **done** — all four routes + navigation |
 | 7 | Print each node and its children readably; print the whole tree with the symbol table | done |
 
 Grading note: groups are differentiated by **the quality and number of semantic errors handled**
-(requirement 4). 11 checks are implemented: the 5 baseline ones plus the 6 harder ones
+(requirement 4). 15 checks are implemented: the 5 baseline ones, the 6 harder ones
 (`UNKNOWN_ATTRIBUTE`, `LOOP_VAR_OUT_OF_SCOPE`, `ORPHAN_BLOCK`, `NOT_ITERABLE`,
 `USED_BEFORE_ASSIGNMENT`, `DUPLICATE_ROUTE`) documented in `semanticChecksPlan.md`, which also
-explains how to demo each with a broken-input fixture.
+explains how to demo each with a broken-input fixture, plus 4 more
+(`DUPLICATE_FUNCTION`, `UNREACHABLE_CODE`, `UNCLOSED_TAG`/`MISMATCHED_TAGS`,
+`UNDEFINED_CSS_CLASS`) each with a fixture in `semantic_tests/` (see `SEMANTIC_TESTS.md`).
+`UNDEFINED_CSS_CLASS` is cross-artifact (template `class=` names vs CSS selectors); the HTML
+balance checks required storing the end-tag name on `HtmlTagNode` as the lenient grammar
+absorbs close tags without verifying names.
 
 ---
 

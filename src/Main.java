@@ -85,6 +85,8 @@ public class Main {
 
             banner("SYMBOL TABLE — " + CSS_FILE);
             dumpSymbols(cssAst);
+
+            analyzer.checkCssClasses(allTemplates, cssAst);
         }
 
         banner("SEMANTIC ANALYSIS");

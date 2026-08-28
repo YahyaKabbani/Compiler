@@ -39,7 +39,13 @@ public class HTMLASTBuilder extends HTMLJinja2ParserBaseVisitor<ASTNode> {
                 children = visitAll(ctx.htmlContent().children);
             }
 
-            return HtmlTagNode.withAttributes(tag, attributes, children, ctx.start.getLine());
+            HtmlTagNode tagNode = HtmlTagNode.withAttributes(tag, attributes, children, ctx.start.getLine());
+            if (ctx.TAG_SLASH_CLOSE() != null) {
+                tagNode.setSelfClosing();
+            } else if (ctx.TAG_SLASH() != null && ctx.TAG_NAME().size() > 1) {
+                tagNode.setEndTag(ctx.TAG_NAME(1).getText());
+            }
+            return tagNode;
         }
 
         if (ctx.jinja() != null) return visit(ctx.jinja());

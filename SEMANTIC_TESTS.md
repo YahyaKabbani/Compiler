@@ -8,7 +8,7 @@ All test inputs live in **`semantic_tests/`**. Each file contains a comment at t
 what it breaks and the exact error expected. The clean project reports **0 errors** — every
 error below only appears when its test file is put in place.
 
-## The 8 checks and their test cases
+## The 12 checks and their test cases
 
 | # | Error code | Meaning | Test file |
 |---|---|---|---|
@@ -20,15 +20,19 @@ error below only appears when its test file is put in place.
 | 6 | `ORPHAN_BLOCK` | a child `{% block %}` name that the parent template never declares, so the override is silently dropped | `semantic_tests/test6_orphan_block.jinja` |
 | 7 | `LOOP_VAR_OUT_OF_SCOPE` | a `{% for %}` loop variable referenced after its loop has already ended | `semantic_tests/test7_loop_var_out_of_scope.jinja` |
 | 8 | `USED_BEFORE_ASSIGNMENT` | a Python name read before any assignment gives it a value in that scope | `semantic_tests/test8_used_before_assignment.py` |
+| 9 | `DUPLICATE_FUNCTION` | the same `def name` registered more than once at module level — the later one silently overrides the earlier | `semantic_tests/test9_duplicate_function.py` |
+| 10 | `UNREACHABLE_CODE` | a statement after `return` inside a function body | `semantic_tests/test10_unreachable_code.py` |
+| 11 | `MISMATCHED_TAGS` / `UNCLOSED_TAG` | `<b>` closed by `</i>`, or a tag opened but never closed (HTML balance) | `semantic_tests/test11_unclosed_tag.jinja` |
+| 12 | `UNDEFINED_CSS_CLASS` | a `class="x"` used in a template with no matching `.x` rule in `style.css` | `semantic_tests/test12_undefined_css_class.jinja` |
 
-`SemanticAnalyzer` actually implements 11 checks in total — `UNKNOWN_ATTRIBUTE`,
+`SemanticAnalyzer` actually implements 15 checks in total — `UNKNOWN_ATTRIBUTE`,
 `NOT_ITERABLE`, and `DUPLICATE_ROUTE` are wired up and working (see
 `semanticChecksPlan.md`) but don't have a `semantic_tests/` fixture yet, since they need a
 template that's actually linked to `render_template(...)` data to fire (a standalone file
 dropped into `templates/` isn't enough for those three). Add fixtures for them the same way
 if needed.
 
-## How to run the template tests (2–7)
+## How to run the template tests (2–7, 11–12)
 
 `Main` analyses every `.jinja` file inside `templates/`, so just copy the test files in:
 
@@ -39,19 +43,22 @@ copy semantic_tests\test4_unclosed_for.jinja templates\
 copy semantic_tests\test5_undefined_variable.jinja templates\
 copy semantic_tests\test6_orphan_block.jinja templates\
 copy semantic_tests\test7_loop_var_out_of_scope.jinja templates\
+copy semantic_tests\test11_unclosed_tag.jinja templates\
+copy semantic_tests\test12_undefined_css_class.jinja templates\
 ```
 
 Run `Main`, then check the report. Clean up afterwards:
 
 ```
-del templates\test2_missing_parent.jinja templates\test3_duplicate_block.jinja templates\test4_unclosed_for.jinja templates\test5_undefined_variable.jinja templates\test6_orphan_block.jinja templates\test7_loop_var_out_of_scope.jinja
+del templates\test2_missing_parent.jinja templates\test3_duplicate_block.jinja templates\test4_unclosed_for.jinja templates\test5_undefined_variable.jinja templates\test6_orphan_block.jinja templates\test7_loop_var_out_of_scope.jinja templates\test11_unclosed_tag.jinja templates\test12_undefined_css_class.jinja
 ```
 
-## How to run the Python tests (1, 8)
+## How to run the Python tests (1, 8, 9, 10)
 
 Test 1 is a full replacement `app.py` whose `home()` renders `"indexx.jinja"` (typo). Test 8
 is a full replacement `app.py` with an extra `/stats` route that reads `count` before
-assigning it. Only swap in one Python test at a time:
+assigning it. Test 9 re-declares `def read()`. Test 10 adds a `stats()` whose body continues
+after `return`. Only swap in one Python test at a time:
 
 ```
 copy app.py app_backup.py
@@ -65,7 +72,8 @@ copy app_backup.py app.py
 del app_backup.py
 ```
 
-(same steps for `test8_used_before_assignment.py`.)
+(same steps for `test8_used_before_assignment.py`, `test9_duplicate_function.py`,
+`test10_unreachable_code.py`.)
 
 ## Verified output (all 8 tests in place)
 
@@ -79,6 +87,17 @@ del app_backup.py
 [ORPHAN_BLOCK] test6_orphan_block.jinja @line 4 — {% block sidebar %} has no matching block in parent 'base.jinja' — this override is silently dropped
 [LOOP_VAR_OUT_OF_SCOPE] test7_loop_var_out_of_scope.jinja @line 8 — {{ p.name }} uses loop variable 'p' outside its {% for %} block
 [USED_BEFORE_ASSIGNMENT] app.py @line 80 — name 'count' is read before any assignment gives it a value
+```
+
+(Line numbers for tests 9–12 below are from the fixture files as committed; your run will
+match.)
+
+```
+[DUPLICATE_FUNCTION] app.py @line 23 — function 'read' is defined more than once — the later definition silently overrides the earlier one
+[UNREACHABLE_CODE] app.py @line 24 — statement after 'return' is unreachable
+[MISMATCHED_TAGS] test11_unclosed_tag.jinja @line 4 — <p> is closed by </span> — mismatched closing tag
+[UNCLOSED_TAG] test11_unclosed_tag.jinja @line 5 — <div> is opened but never closed
+[UNDEFINED_CSS_CLASS] test12_undefined_css_class.jinja @line 4 — class 'featured-card' used in test12_undefined_css_class.jinja has no matching .featured-card rule in static/style.css
 ```
 
 Note on test 4: it reports **two** unclosed blocks. The missing `{% endfor %}` means the

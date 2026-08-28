@@ -1,0 +1,6 @@
+{# Breaks: MISMATCHED_TAGS + UNCLOSED_TAG — <p> is absorbed (closed by </span>), <div> never closed #}
+{% extends "base.jinja" %}
+{% block content %}
+<p>Unclosed paragraph
+<div>Mismatched</span>
+{% endblock %}

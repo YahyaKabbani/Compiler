@@ -10,6 +10,8 @@ public class HtmlTagNode extends TemplateNode {
     private final Map<String, String> attributes;
     private final List<HtmlAttributeNode> attributeNodes;
     private List<ASTNode> children;
+    private String endTag;
+    private boolean selfClosing;
 
     public HtmlTagNode(String tagName, List<ASTNode> children, int line) {
         this(tagName, new LinkedHashMap<>(), children, line);
@@ -40,6 +42,31 @@ public class HtmlTagNode extends TemplateNode {
     }
 
     public String getTagName() { return tagName; }
+
+    public String getEndTag() { return endTag; }
+
+    public void setEndTag(String endTag) { this.endTag = endTag; }
+
+    public void setSelfClosing() { this.selfClosing = true; }
+
+    public boolean isSelfClosing() { return selfClosing; }
+
+    public List<String> classNames() {
+        List<String> names = new ArrayList<>();
+        String value = null;
+        for (Map.Entry<String, String> a : attributes.entrySet()) {
+            if ("class".equalsIgnoreCase(a.getKey())) {
+                value = a.getValue();
+                break;
+            }
+        }
+        if (value == null || value.contains("{{")) return names;
+        String clean = value.replaceAll("^[\"']+|[\"']+$", "");
+        for (String token : clean.split("\\s+")) {
+            if (!token.isEmpty() && !names.contains(token)) names.add(token);
+        }
+        return names;
+    }
 
     public Map<String, String> getAttributes() { return attributes; }
 

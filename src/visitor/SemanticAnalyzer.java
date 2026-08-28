@@ -1,6 +1,8 @@
 package visitor;
 
 import ast.ASTNode;
+import ast.CssRuleSetNode;
+import ast.HtmlTagNode;
 import ast.JinjaBlockNode;
 import ast.JinjaExprNode;
 import ast.JinjaExtendsNode;
@@ -24,12 +26,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SemanticAnalyzer extends AbstractASTVisitor {
     private static final Set<String> PYTHON_BUILTINS = Set.of(
             "__name__", "print", "len", "open", "range", "str", "int", "float",
             "bool", "list", "dict", "set", "tuple", "input", "enumerate", "sorted",
             "sum", "min", "max", "abs", "type", "isinstance", "zip", "map", "filter");
+
+    private static final Set<String> VOID_TAGS = Set.of(
+            "br", "hr", "img", "input", "link", "meta");
 
     private final Path templateDir;
     private final List<String> errors = new ArrayList<>();
@@ -38,6 +45,7 @@ public class SemanticAnalyzer extends AbstractASTVisitor {
     private final Deque<String> liveLoopVars = new ArrayDeque<>();
     private final Deque<Set<String>> definedNames = new ArrayDeque<>();
     private final Set<String> everSeenLoopVars = new HashSet<>();
+    private final Set<String> seenFunctions = new HashSet<>();
     private String currentFile;
     private ASTNode currentRecord;
     private String currentLoopVar;
@@ -51,6 +59,7 @@ public class SemanticAnalyzer extends AbstractASTVisitor {
     public void analyzePython(ASTNode root, String file) {
         currentFile = file;
         definedNames.clear();
+        seenFunctions.clear();
         if (root != null) root.accept(this);
     }
 
@@ -96,10 +105,23 @@ public class SemanticAnalyzer extends AbstractASTVisitor {
 
     @Override
     public void visit(FunctionDefNode node) {
+        if (!seenFunctions.add(node.getName())) {
+            error("DUPLICATE_FUNCTION", currentFile, node.getLine(),
+                    "function '" + node.getName() + "' is defined more than once — the later definition silently overrides the earlier one");
+        }
         define(node.getName());
         for (ASTNode decorator : node.getDecorators()) decorator.accept(this);
         definedNames.push(new HashSet<>(node.getParams()));
-        for (ASTNode statement : node.getBody()) statement.accept(this);
+        boolean exited = false;
+        for (ASTNode statement : node.getBody()) {
+            if (exited) {
+                error("UNREACHABLE_CODE", currentFile, statement.getLine(),
+                        "statement after 'return' is unreachable");
+                break;
+            }
+            statement.accept(this);
+            if (statement.isExitPoint()) exited = true;
+        }
         definedNames.pop();
     }
 
@@ -239,6 +261,72 @@ public class SemanticAnalyzer extends AbstractASTVisitor {
         @Override
         public void visit(JinjaBlockNode node) {
             names.add(node.getBlockName());
+            visitChildren(node);
+        }
+    }
+
+    @Override
+    public void visit(HtmlTagNode node) {
+        String tag = node.getTagName().toLowerCase();
+        if (!"__group__".equals(tag) && !VOID_TAGS.contains(tag) && !node.isSelfClosing()) {
+            String endTag = node.getEndTag();
+            if (endTag == null) {
+                error("UNCLOSED_TAG", currentFile, node.getLine(),
+                        "<" + node.getTagName() + "> is opened but never closed");
+            } else if (!endTag.equalsIgnoreCase(node.getTagName())) {
+                error("MISMATCHED_TAGS", currentFile, node.getLine(),
+                        "<" + node.getTagName() + "> is closed by </" + endTag + "> — mismatched closing tag");
+            }
+        }
+        visitChildren(node);
+    }
+
+    public void checkCssClasses(Map<String, ASTNode> templates, ASTNode cssRoot) {
+        if (cssRoot == null) return;
+        Set<String> defined = new HashSet<>();
+        cssRoot.accept(new CssClassCollector(defined));
+        for (Map.Entry<String, ASTNode> entry : templates.entrySet()) {
+            UsedClassCollector used = new UsedClassCollector(defined);
+            entry.getValue().accept(used);
+            for (Map.Entry<String, Integer> v : used.violations.entrySet()) {
+                error("UNDEFINED_CSS_CLASS", entry.getKey(), v.getValue(),
+                        "class '" + v.getKey() + "' used in " + entry.getKey()
+                                + " has no matching ." + v.getKey() + " rule in static/style.css");
+            }
+        }
+    }
+
+    private static final class CssClassCollector extends AbstractASTVisitor {
+        private final Set<String> classes;
+
+        CssClassCollector(Set<String> classes) {
+            this.classes = classes;
+        }
+
+        @Override
+        public void visit(CssRuleSetNode node) {
+            Pattern p = Pattern.compile("\\.([\\w-]+)");
+            Matcher m = p.matcher(node.getSelector());
+            while (m.find()) classes.add(m.group(1));
+            visitChildren(node);
+        }
+    }
+
+    private static final class UsedClassCollector extends AbstractASTVisitor {
+        private final Set<String> defined;
+        private final Map<String, Integer> violations = new LinkedHashMap<>();
+
+        UsedClassCollector(Set<String> defined) {
+            this.defined = defined;
+        }
+
+        @Override
+        public void visit(HtmlTagNode node) {
+            for (String name : node.classNames()) {
+                if (!defined.contains(name)) {
+                    violations.putIfAbsent(name, node.getLine());
+                }
+            }
             visitChildren(node);
         }
     }
